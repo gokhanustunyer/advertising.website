@@ -1,0 +1,45 @@
+﻿@using tatil.entity.Statics
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form class="mt-5 form-group" method="post">
+    <h4 style="padding: .5rem">Yeni SEO</h4>
+    <div class="form-group mt-2">
+        <label for="url" class="col-md-12">Url</label>
+        <div class="col-md-12">
+            <input type="text" name="Url" id="url" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="title" class="col-md-12">Başlık</label>
+        <div class="col-md-12">
+            <input type="text" name="Title" id="title" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="Description" class="col-md-12">Açıklama</label>
+        <div class="col-md-12">
+            <input type="text" name="Description" id="Description" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="Publisher" class="col-md-12">Publisher</label>
+        <div class="col-md-12">
+            <input type="text" name="Publisher" id="Publisher" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="Author" class="col-md-12">Author</label>
+        <div class="col-md-12">
+            <input type="text" name="Author" id="Author" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="Keywords" class="col-md-12">Keywords</label>
+        <div class="col-md-12">
+            <input type="text" name="Keywords" id="Keywords" class="form-control form-control-line">
+        </div>
+    </div>
+  <button class="btn btn-primary" style="width:100%;display:block">Kaydet</button>
+</form>

@@ -1,0 +1,224 @@
+﻿@using tatil.entity.Advert
+@using tatil.entity.Category
+@using tatil.entity.Filter
+@using tatil.entity.Identity
+@model Advert
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<FilterBox>? Filterboxes = ViewBag.Filterboxes;
+    List<Category>? Categories = ViewBag.Categories;
+}
+@section Scripts{
+    <script src="~/admin/dist/js/image.upload.js"></script>
+    <script src="~/js/address.js"></script>
+    <script src="~/js/country.js"></script>
+    <script>const imageManager = new ImageManager('images','@Model.Id');</script>
+    <script src="~/js/froala_editor.pkgd.min.js"></script>
+    <script> getCities("GetAllCities", "@Html.Raw(Model.City)", "@Html.Raw(Model.District)", "@Html.Raw(Model.Neighbourhood)"); </script>
+    <script>
+        new FroalaEditor('#Description', {
+            imageUploadParam: 'image_param',
+            imageUploadURL: '/home/uploadImage',
+            imageUploadMethod: 'POST',
+            imageMaxSize: 5 * 1024 * 1024,
+            imageAllowedTypes: ['jpeg', 'jpg', 'png', 'webp', 'avif'],
+        });
+        new FroalaEditor('#ShortDescription', {
+        events: {
+            'image.beforeUpload': function(img) {
+            }
+        }
+        });
+    </script>
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/froala_editor.pkgd.min.css">
+    <style>
+        .form-group{
+            padding: 1rem .5rem;
+            margin-bottom: 0;
+        }
+        ul, li{
+            list-style: none;
+        }
+
+        .category-box{
+            cursor: pointer;
+            padding: 0.5rem;
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+            border-radius: 5px;
+            margin-right: 1rem;
+            height: 100%;
+        }
+        .admin-select{
+            width: 100%;
+            border: 1px solid #dfdfdf;
+            padding: 0.5rem 0.25rem;
+        }
+    </style>    
+}
+<div class="mt-5 form-group row container m-auto">
+    <div class="col">
+        <h3 style="padding: .5rem">İlan Düzenle</h3>
+    </div>
+    <div class="col" style="text-align:right">
+        <form method="post" action="/admin/deleteAdvert">
+            <input hidden asp-for="Id">
+            <button class="btn btn-danger btn-sm text-white">İlanı Sil</button>
+        </form>
+    </div>
+</div>
+<form class="container form-group" method="post" enctype="multipart/form-data">
+    <a class="btn btn-success text-white" onclick="imageManager.openImagesDialog('@Model.Id')">Görselleri Düzenle</a>
+    <div class="form-group">
+        <label for="title" class="col-md-12">İlan Başlığı</label>
+        <div class="col-md-12">
+            <input type="text" name="Title" id="title" value="@Model.Title" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber" class="col-md-12">Telefon Numarası</label>
+        <div class="col-md-12">
+            <input type="text" name="PhoneNumber" id="phoneNumber" value="@Model.PhoneNumber" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col">
+                <label for="price" class="col-md-12">Fiyat</label>
+                <div class="col-md-12">
+                    <input type="text" name="Price" id="price" value="@Model.Price" class="form-control form-control-line">
+                </div>
+            </div>
+            <div class="col">
+                <label for="size" class="col-md-12">Net (m<sup>2</sup>)</label>
+                <div class="col-md-12">
+                    <input type="text" name="Size" id="size" value="@Model.Size" class="form-control form-control-line">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="url" class="col-md-12">İlan Linki</label>
+        <div class="col-md-12">
+            <input type="text" name="Url" id="url" value="@Model.Url" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="humanCapacity" class="col-md-12">İnsan Kapasitesi</label>
+        <div class="col-md-12">
+            <input type="text" name="HumanCapacity" id="humanCapacity" value="@Model.HumanCapacity" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="bedCapacity" class="col-md-12">Yatak Kapasitesi</label>
+        <div class="col-md-12">
+            <input type="text" name="BedCapacity" id="bedCapacity" value="@Model.BedCapacity" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ShortDescription" class="col-md-12">Kısa (Üst) Açıklama</label>
+        <div class="col-md-12">
+            <textarea type="text" name="ShortDescription" id="ShortDescription">@Model.ShortDescription</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Description" class="col-md-12">Açıklama</label>
+        <div class="col-md-12">
+            <textarea type="text" name="Description" id="Description" class="form-control form-control-line">@Model.Description</textarea>
+        </div>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <small style="color:#b0b0b0">Şehir</small>
+            <select name="City" class="admin-select rounded-0" onchange="changeCity(this)" id="cities"></select>
+        </div>
+        <div class="form-group">
+            <small style="color:#b0b0b0">İlçe</small>
+            <select name="District" class="admin-select rounded-0" disabled 
+            onchange="changeDistrict(this)" id="districts"></select>
+        </div>
+        <div class="form-group">
+            <small style="color:#b0b0b0">Mahalle</small>
+            <select disabled name="Neighborhood" class="admin-select rounded-0" id="neighborhood"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm">
+            <label for="isActive" class="col-md-12">İlan Yayında mı?</label>
+        </div>
+        <div class="col-sm" style="text-align:right">
+            <div class="col-md-12">
+                <input style="font-size:1.25rem" type="checkbox" value="true" name="IsActive" id="isActive" @(Model.IsActive ? "checked" : "") class="form-check-input">
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="filter-title">Filtreler</h4>
+    <div class="d-flex mb-3 flex-wrap">
+        @for(int i=0;i<Filterboxes.Count;i++)
+        {
+            <div class="mr-2 category-box mt-2" id="heading@(i)" style="cursor:pointer;padding:.5rem;box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;border-radius:5px">
+                <a class="d-flex justify-content-between" data-toggle="collapse" data-target="#filterBox@(i)">
+                    <h5>@Filterboxes[i].FilterBoxTitle</h5>
+                    <i class="mdi mdi-chevron-down"></i>
+                </a>
+                @{
+                        <ul id="filterBox@(i)" class="collapse filter-box" data-parent="#heading@(i)">
+                        @foreach(Filter filter in Filterboxes[i].Filters)
+                {
+                            <li class="my-2 custom-control custom-checkbox">
+                                <input  class="custom-control-input" type="checkbox" @(Model.Filters.Contains(filter) ? "checked" : "") id="@filter.Id" name="FilterIds" value="@filter.Id">
+                                <label class="custom-control-label filter-link" for="@filter.Id">@filter.FilterTitle</label>
+                            </li>
+                }
+                        </ul>
+                }
+            </div>
+        }
+    </div>
+    <hr>
+    <h4 class="filter-title">Kategoriler</h4>
+    <div class="d-flex mb-3 flex-wrap">
+        @foreach(Category category in Categories)
+        {
+          <div style="margin-right:1rem">
+              <input class="form-check-input" @(Model.Categories.Contains(category) ? "checked" : "") type="checkbox" value="@category.Id" id="defaultCheck1" value="@category.Id" name="CategoryIds">
+              <label class="form-check-label" for="@category.Id">
+                @category.Name
+              </label>
+          </div>
+        }
+
+    </div>
+    <input hidden name="Id" value="@Model.Id"/>
+    <button class="btn btn-primary" style="width:100%;display:block">Kaydet</button>
+</form>
+
+
+<div class="dialog" style="position:fixed;">
+    <div class="dialog-window">
+        <i onclick="openDialog()" class="mdi mdi-close close-btn"></i>
+        <div class="grid-2">
+            <h3 class="lg-title">Ürün Resimleri</h3>
+                <input name="postedFiles" multiple style="display: none;" 
+                    id="postedFiles" type="file" class="file-upload-input">
+                <input hidden value="@Model.Id" name="Id" id="productId">
+                <div style="display:grid;grid-template-columns:2fr 1fr">
+                    <label class="btn btn-primary upload-image shp-left" 
+                        for="postedFiles" style="margin-bottom:0!important;width:100%!important">
+                        <i class="mdi mdi-folder-multiple-image"></i>
+                        Resim Yükle
+                    </label>
+                    <button onclick="imageManager.uploadImage()" class="btn btn-danger text-white shp-right">Gönder</button>
+                </div>
+        </div>
+        <hr>
+        <div class="images mb-2" id="images"></div>
+        <button onclick="imageManager.saveAlignment()" class="btn btn-primary" style="width: 30%;margin-top: -3.35rem;">Sıralamayı Kaydet</button>
+    </div>
+</div>

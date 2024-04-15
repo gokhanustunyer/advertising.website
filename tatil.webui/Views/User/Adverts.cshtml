@@ -1,0 +1,57 @@
+﻿@using tatil.entity.Advert
+@model List<Advert>
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+@section Styles{
+    <style>
+        .table td{
+            vertical-align: baseline;
+        }
+    </style>
+}
+@section SubHeader{
+    <div class="sub-header-sm" style="background-image: url('/img/subheader4.jpg');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">İlanlarım</h2>
+            <p style="font-size: 1rem;">Yayında olan veya olmayan ilanlarınızı inceleyin ve durumlarını değerlendirin ancak mutlaka ilanlarınızı güncel tutun</p>
+        </div>
+    </div>
+}
+
+@functions{
+    public string Capitalize(string str)
+    {
+        var result = $"{char.ToUpper(str[0])}";
+        for (int i = 1; i < str.Count(); i++)
+        {
+            result += char.ToLower(str[i]);
+        }
+        return result;
+    }
+}
+<table class="ml-3 table table-hover w-100 user-adverts-table" style="background-color:#fff">
+    <thead>
+    <tr>
+        <th scope="col">Resim</th>
+        <th scope="col">Başlık</th>
+        <th scope="col">Durum</th>
+        <th scope="col">Konum</th>
+        <th scope="col" width="200"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (Advert advert in Model)
+    {
+        <tr>
+            <td><img src="@advert.AdvertImages[0].Path" width="250"></td>
+            <td>@advert.Title</td>
+            <td>@(advert.IsActive ? "Yayına Açık" : "Yayına Kapalı")</td>
+            <td>@Capitalize(advert.City)/@Capitalize(advert.District)</td>
+            <td>
+                <a href="/user/editAdvert/@advert.Id">Düzenle</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

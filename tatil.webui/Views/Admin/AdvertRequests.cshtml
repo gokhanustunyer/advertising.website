@@ -1,0 +1,72 @@
+﻿@using tatil.entity.Identity
+@model List<AppUser>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles{
+    <style>
+        li{
+            list-style: none;
+        }
+        li label{
+            margin-bottom: 0
+        }
+        li ul{
+            margin-left:.6rem;
+        }
+        ul .form-check{
+            margin-bottom:0;
+        }
+        ol, ul{
+            padding-left: 0;
+        }
+        .filter-result{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+}
+
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>Bekleyen İstekler</h2>
+    </div>
+</div>
+
+<table class="table table-hover" style="background-color:#fff">
+  <thead>
+    <tr>
+        <th scope="col">E-Posta</th>
+        <th scope="col">Telefon</th>
+        <th scope="col">Mesaj</th>
+        <th scope="col" width="200"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(var i = 0; i < @Model.Count; i++)
+    {
+    <tr>
+        <td>@Model[i].Email</td>
+        <td>@Model[i].PhoneNumber</td>
+        <td>@Model[i].AdvertRequestMessage</td>
+        <td>
+            <form method="post" action="/admin/confirmAdvertRequest" style="display:inline">
+                <input hidden value="@Model[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    Onayla
+                </button>
+            </form>
+            <form method="post" action="/admin/rejectAdvertRequest" style="display:inline">
+                <input hidden value="@Model[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    Reddet
+                </button>
+            </form>
+        </td>
+    </tr>
+    }
+  </tbody>
+</table>

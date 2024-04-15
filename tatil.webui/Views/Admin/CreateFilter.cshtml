@@ -1,0 +1,48 @@
+﻿@using tatil.entity.Filter
+@model Filter
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts{
+    <script>
+        function changeFilterCount(htmlObject) {
+            let parent = document.querySelector("#optionCount");
+            let value = htmlObject.options[htmlObject.selectedIndex].innerHTML;
+            parent.innerHTML = "";
+            for (let i = 0; i < value; i++) {
+                parent.innerHTML += `
+                    <div class="mb-2">
+                        <div style="display:flex;flex-direction: column;">
+                            <label class="admin-label">Başlık</label>
+                            <input id="optionName${i}" name="FilterNames" type="text" class="form-control" placeholder="3+1">
+                        </div
+                    </div>`;
+            }
+            parent.innerHTML += "<hr>";
+        }
+    </script>
+}
+
+<div class="econtent-65"></div>
+<form method="post">
+    <div class="form">
+        <div class="form-group mt-3">
+            <label for="name" class="col-md-12">Filtre Adı</label>
+            <div class="col-md-12">
+                <input type="text" id="name" name="FilterBoxTitle" class="form-control form-control-line">
+            </div>
+        </div>
+        <div class="flex-col mb-2">
+            <label for="options" class="admin-label">Seçenek Sayısı</label>
+            <select name="Options" class="form-select" onchange="changeFilterCount(this)" id="options">
+            @for(int i = 0; i < 26; i++)
+            {
+                <option value="@(i)">@(i)</option>
+            }
+            </select>
+            <div class="mb-1 mt-2 flex-col" id="optionCount"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;display:block">Filtreyi Ekle</button>
+    </div>
+</form>

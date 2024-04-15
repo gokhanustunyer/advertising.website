@@ -1,0 +1,200 @@
+﻿@using tatil.entity.Advert
+@using tatil.entity.Category
+@using tatil.entity.Filter
+@model Advert
+@section SubHeader{
+        <div class="sub-header-xsm" style="background-image: url('/img/subheader.jpg');">
+            <div class="container sub-header-content">
+                <h2 class="sub-header-title mb-0">@Model.Title</h2>
+                @* <p class="mb-0 last-none">@Html.Raw(Model.ShortDescription)</p> *@
+            </div>
+        </div>
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/advert-details.css">
+     <style>
+        body{
+            background-color: #f9f9f9;
+        }
+     </style>
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    $(".thumbnails img").click(function(e) {
+        e.preventDefault();
+        $imgURL = $(this).attr("src");
+        console.log($imgURL);
+        jQuery(".main-image").fadeOut(400, function() {
+            jQuery("#mainImage").attr('src',$imgURL);
+        }).fadeIn(300);
+    });
+    </script>
+    <script>
+        const ele = document.querySelector('.thumbnails');
+        ele.scrollTop = 100;
+        ele.scrollLeft = 150;
+        let pos = { top: 0, left: 0, x: 0, y: 0 };
+
+        const mouseDownHandler = function (e) {
+            pos = {
+                left: ele.scrollLeft,
+                top: ele.scrollTop,
+                x: e.clientX,
+                y: e.clientY,
+            };
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+        const mouseMoveHandler = function (e) {
+            const dx = e.clientX - pos.x;
+            const dy = e.clientY - pos.y;
+
+            ele.scrollTop = pos.top - dy;
+            ele.scrollLeft = pos.left - dx;
+        };
+        const mouseUpHandler = function () {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+
+            ele.style.cursor = 'grab';
+            ele.style.removeProperty('user-select');
+        };
+        ele.addEventListener('mousedown', mouseDownHandler);
+    </script>
+}
+<div class="advert-details mt-4 container d-flex p-0">
+    <div class="images d-flex flex-column">
+        <div class="my-2">
+            <a href="/tatil-evleri" class="category-links smoke">Tatil Evleri</a>
+            <span class="smoke">></span><a href="/@Model.Categories[0].Url" class="category-links smoke">@Model.Categories[0].Name</a>
+            <span class="smoke">></span><a href="" class="category-links smoke">@Model.Title</a>
+        </div>
+        <div class="main-image">
+            <img src="@Model.AdvertImages[0].Path" id="mainImage">
+        </div>
+        <div class="thumbnails pb-3 d-flex flex-wrap border-bottom">
+            @foreach(AdvertImage image in Model.AdvertImages){
+                <img src="@image.Path" alt="">
+            }
+        </div>
+        <div class="row mt-1 ">
+            <div class="col">
+                <div class="published small smoke font-weight-bold">
+                    <i class="fa-solid fa-user"></i>
+                    <span>İlanı Yayınlayan:</span> <span class="ml-1">@Model.Publisher.FirstName @Model.Publisher.LastName</span>
+                </div>
+            </div>
+            <div class="col text-right">
+                <div class="smoke small publish-date font-weight-bold">
+                    <span>Yayınlanma Tarihi:</span> <span class="ml-1">@Model.CreateDate.Day.@Model.CreateDate.Month.@Model.CreateDate.Year</span>
+                </div>
+            </div>
+        </div>
+        <div class="categories mt-4 border-bottom pb-3">
+            <h5 class="medium-title" style="margin-bottom: -.5rem;">Özellikler</h5>
+            <div class="feature-boxes d-flex flex-wrap">
+                @foreach(Filter filter in Model.Filters)
+                {
+                    <div class="feature-box mr-2 mt-2">
+                        <p class="feature">@filter.FilterBox.FilterBoxTitle</p>
+                        <p class="feature">@filter.FilterTitle</p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="description mt-4 border-bottom pb-3">
+            <h5 class="mb-0 medium-title">Açıklama</h5>
+            <div class="mt-1 last-none">
+                @Html.Raw(Model.Description)
+            </div>
+        </div>
+        <div class="categories mt-4">
+            <h5 class="medium-title">Kategoriler</h5>
+            <div class="feature-boxes d-flex flex-wrap">
+                @foreach(Category category in Model.Categories)
+                {
+                    <div class="feature-box mr-2">
+                        <a class="feature" href="/@category.Url">@category.Name</a>
+                    </div>
+                    
+                }
+            </div>
+        </div>
+    </div>
+    <div class="advert-strings" style="width:30%">
+        <div class="features">
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-city mr-1"></i> Şehir
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.City</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-building-circle-arrow-right mr-1"></i> İlçe
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.District</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-house mr-1"></i> Mahalle
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.Neighbourhood</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-bed mr-1"></i> Yatak Kapasitesi
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.BedCapacity</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-person mr-1"></i> İnsan Kapasitesi
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.HumanCapacity</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-ruler mr-1"></i> Net (m<sup>2</sup>)
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.Size</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-phone mr-1"></i> Yetkili Telefon
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.PhoneNumber</p>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col font-weight-bold smoke">
+                    <i class="fa-solid fa-dollar-sign mr-1"></i> Fiyat
+                </div>
+                <div class="col text-right">
+                    <p class="smoke font-weight-bold">@Model.Price TL</p>
+                </div>
+            </div>
+            <div class="row">
+                <p class="josefin w-100" style="font-size:1.25rem">Açıklama</p>
+                <div>
+                    <p class="smoke last-none">@Html.Raw(Model.ShortDescription)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿@using tatil.entity.Category
+@model Category
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="econtent-65"></div>
+<form method="post">
+    <div class="form">
+        <div class="form-group mt-3">
+            <label asp-for="Name" class="col-md-12">Kategori Adı</label>
+            <div class="col-md-12">
+                <input type="text" asp-for="Name" class="form-control form-control-line">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;display:block">Ekle</button>
+    </div>
+</form>

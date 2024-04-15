@@ -1,0 +1,148 @@
+.images{
+    padding: 2rem;
+    margin-right: 1rem;
+    background-color: #fff;
+    border: 1px solid #dfdfdf;
+    padding-top: 0;
+    width: 70%;
+}
+
+.main-image img{
+    width: 100%;
+    object-fit: cover;
+    height: 720px;
+}
+.thumbnails {
+    cursor: grab;
+    overflow: auto;
+}
+
+.thumbnails img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: .35rem;
+    margin-top: .35rem;
+    cursor: pointer;
+    transition: .2s;
+}
+.thumbnails img:hover{
+    opacity: .8;
+}
+
+.advert-strings{
+    padding: 1rem;
+    border: 1px solid #dfdfdf;
+    background-color: #fff;
+    height: 100%;
+    width: 40%;
+    position: sticky;
+    top: 86px;
+    height: 90vh;
+}
+.features{
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.features p{
+    margin-bottom: 0;
+}
+.features .row{
+    padding: 1.25rem 1rem;
+    margin: .05rem;
+}
+
+.feature-box{
+    background-color: #f3f5f7;
+    padding: 0.75rem;
+    color: #5999ff;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Quicksand';
+    font-size: .9rem;
+    font-weight: bold;
+}
+
+.feature-box .feature{
+    margin-bottom: 0;
+}
+
+.category-links{
+    padding: 0.5rem 0;
+    font-family: 'Quicksand';
+    font-weight: bold;
+}
+
+.category-links:hover{
+    color: #727272;
+    opacity: .9;
+}
+.description img{
+    margin-right: .45rem;
+}
+.input-user {
+    padding: .5rem .35rem;
+}
+@media(max-width:1450px) {
+    .features .row {
+        padding: .65rem;
+    }
+
+    .advert-strings {
+        width: 35% !important;
+    }
+}
+@media (max-width:1120px){
+    .advert-details{
+        flex-direction: column-reverse
+    }
+    .advert-strings {
+        padding: 1rem;
+        border: 1px solid #dfdfdf;
+        background-color: #fff;
+        height: 100%;
+        width: 100%!important;
+        position: static;
+    }
+    .features .row{
+        padding: 1rem;
+    }
+    .images{
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .main-image img{
+        height: 220px;
+    }
+    .thumbnails{
+        flex-wrap: nowrap !important;
+    }
+    .thumbnails::-webkit-scrollbar{
+        display:none;
+    }
+    .features .row {
+        font-size: 1rem;
+        padding: .75rem;
+    }
+}
+
+@media(max-width:1720px){
+    .features .row {
+        padding: 1rem;
+    }
+}
+
+@media(max-width:1550px) {
+    .features .row {
+        font-size: .9rem;
+        padding: .75rem;
+    }
+}
+
+@media(max-width:1400px) {
+    .features .row {
+        padding: .3rem;
+    }
+}

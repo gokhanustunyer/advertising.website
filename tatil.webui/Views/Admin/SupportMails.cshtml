@@ -1,0 +1,35 @@
+﻿@using tatil.entity.PageEntities
+@model List<SupportFormModel>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>Mesaj Listesi</h2>
+    </div>
+</div>
+<table class="table table-hover" style="background-color:#fff">
+    <thead>
+    <tr>
+        <th scope="col">İsim</th>
+        <th scope="col">Telefon</th>
+        <th scope="col">E-Posta</th>
+        <th scope="col">Tarih</th>
+        <th scope="col">Mesaj</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (SupportFormModel formModel in Model)
+    {
+        <tr>
+            <td>@formModel.Name</td>
+            <td>@formModel.Phone</td>
+            <td>@formModel.Email</td>
+            <td>@formModel.CreateDate</td>
+            <td>@formModel.Messsage</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,401 @@
+﻿@using tatil.business.Abstract.Service
+@using tatil.entity.Advert
+@using tatil.entity.Filter
+@using tatil.entity.Statics
+@model List<Advert>
+@inject IPageStringsService _pageStringsService
+@inject IMainPageService _mainPageService
+@{
+    PageStrings pageStrings = _pageStringsService.GetSettings();
+    MainPage mainPage = _mainPageService.GetSettings();
+}
+@functions{
+    public string Capitalize(string str)
+    {
+        var result = $"{char.ToUpper(str[0])}";
+        for (int i = 1; i < str.Count(); i++)
+        {
+            result += char.ToLower(str[i]);
+        }
+        return result;
+    }
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/address.js"></script>
+    <script src="~/js/country1.js"></script>
+    <script>
+        function ChangeCityAndUpdateQuery(self) {
+            changeCity(self); 
+        }
+        function ChangeDistrictAndUpdateQuery(self) {
+            changeDistrict(self);
+        }
+        getCities("GetAllCities");
+    </script>
+    <script>
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting){
+                    entry.target.classList.add("animate__animated");
+                    if (entry.target.classList.contains("animation-left")){
+                        entry.target.classList.add("animate__fadeInLeft");
+                    }
+                    else if (entry.target.classList.contains("animation-right")){
+                        entry.target.classList.add("animate__fadeInRight");
+                    }
+                    else if (entry.target.classList.contains("fadeA")){
+                        entry.target.classList.add("animate__fadeIn");
+                    }
+                    else if (entry.target.classList.contains("animation-down")){
+                        entry.target.classList.add("animate__fadeInDown");
+                    }
+                    else if (entry.target.classList.contains("animation-top")){
+                        entry.target.classList.add("animate__fadeInUp");
+                    }
+
+                    if (entry.target.classList.contains("numerics")){
+                        const counters = document.querySelectorAll('.numeric-value .num');
+                        counters.forEach( item => {
+                            const ratio = +item.getAttribute('akhi')/100;
+                            let startingNum = 0;
+                            let animationSpeed = 12;
+                            let number = +item.getAttribute('akhi');
+                    
+                            let interval = setInterval(()=>{
+                              if(startingNum >= number){
+                                clearInterval(interval);
+                              } else {
+                                 startingNum += ratio;
+                                item.innerHTML = Math.round(startingNum);
+                              }
+                     
+                            },animationSpeed);
+                        });
+                
+                    }
+                }
+            })
+        })
+        const hiddenElements = document.querySelectorAll(".hide");
+        hiddenElements.forEach(element => observer.observe(element))
+    </script>
+}
+@section SubHeader{
+    <div class="sub-header-lg flex-column" style="background-image: url('@mainPage.headerImagePath');background-attachment:fixed;">
+        <div class="container d-flex flex-column align-items-center justify-content-center header-string-content">
+            <h2 class="header-content-title animation-down hide">tatilimibuldum.com</h2>
+            <p class="header-content-prg animation-top hide">@mainPage.headerText</p>
+        </div>
+        <div class="container sub-header-content d-flex flex-column align-items-center">
+            <form class="main-search d-flex" action="/tatil-evleri">
+                <div class="selects d-flex hide fadeA" style="gap:7px">
+                    <select onchange="ChangeCityAndUpdateQuery(this)" name="city" id="cities" class="main-search-select">
+                        <option value="" disabled selected hidden>Şehir</option>
+                    </select>
+                    <select disabled onchange="ChangeDistrictAndUpdateQuery(this)" name="district" id="districts" class="main-search-select">
+                        <option value="" disabled selected hidden>İlçe</option>
+                    </select>
+                </div>
+                <div class="txt-button d-flex hide fadeA" style="gap:7px">
+                    <input type="text" placeholder="Arat.." name="search" class="main-search-input">
+                    <button class="main-search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        .ilan-icerik {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ilan-bilgi {
+            position: absolute;
+            bottom: 28px;
+            left: 0;
+            width: 100%;
+            padding: .4rem .5rem;
+            background-color: #141414b0;
+            color: #fff;
+            font-family: 'quicksand';
+        }
+
+        .ilan-baslik {
+            font-family: 'Josefin Sans';
+            font-weight: 400;
+            font-size:1.15rem;
+        }
+
+        .ilan-ikonlari {
+            position: absolute;
+            top: 10px;
+            right: -70px;
+            transition: .3s;
+        }
+
+        .ilan-ikonu {
+            color: #db8e00;
+            background-color: #fff;
+            border-radius: 50%;
+            height: 35px;
+            width: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+        .ilan-icerik:hover .ilan-ikonlari{
+            right: 10px;
+        }
+        .ilan-resim {
+            width: 480px;
+            height: 450px;
+            object-fit: cover;
+        }
+        .ilan-fiyat{
+            font-family: 'quicksand';
+            font-weight: 600;
+            background-color: #db8e00;
+            font-size: 1.1rem;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0 0 6px 6px;
+            color: #fff;
+        }
+        .ilan{
+            width: 480px;
+        }
+
+    </style>
+}
+<div class="econtent-125"></div>
+<div class="vision container d-flex mt-4" style="gap:15px">
+    <div class="vision-images animation-left hide">
+        <img src="@mainPage.welcomeTextImagePath1" alt="" class="vision-img-upper">
+        <img src="@mainPage.welcomeTextImagePath2" alt="" class="vision-img-lower">
+    </div>
+    <div class="vision-content border-bottom pb-5 animation-right hide">
+        <h4 class="vision-title">@mainPage.welcomeTitle</h4>
+        <p class="vision-content">@mainPage.welcomeText</p>
+        <a href="/tatil-evleri" class="button-user-dark ">Hemen Keşfet</a>
+    </div>
+</div>
+<div class="econtent-75"></div>
+@if (Model.Count > 0)
+{
+    <div class="container content mt-5 pt-3 recomended-adverts">
+        <div class="recomendets text-center">
+            <h3>Öne Çıkan İlanlar</h3>
+        </div>
+        <div class="adverts d-flex mt-2 flex-wrap" style="gap: 10px;">
+            @foreach(Advert advert in Model)
+            {
+                <a class="ilan mb-3" href="/@advert.Categories[0].Url/@advert.Url">
+                    <div class="ilan-icerik">
+                        <img src="@advert.AdvertImages.OrderBy(a => a.Index).ToList()[0].Path" class="ilan-resim">
+                        <div class="ilan-bilgi medium">
+                            <div class="d-flex justify-content-between">
+                                <div class="ellipsis w-50">
+                                    <i class="fa-solid fa-location-dot mr-1"></i> @Capitalize(advert.City)/@Capitalize(advert.District)
+                                </div>
+                                <div class="w-50 ellipsis text-right">
+                                    <span class="ellipsis">
+                                        <i class="fa-solid fa-bed mr-1"></i> @advert.BedCapacity Yatak
+                                    </span>
+                                    <span class="ellipsis">
+                                        <i class="fa-solid fa-user-group ml-2 mr-1"></i> @advert.HumanCapacity Kişi
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ilan-ikonlari d-flex flex-column">
+                            <div class="ilan-ikonu">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="ilan-baslik text-dark ellipsis">
+                                @advert.Title
+                            </div>
+                            <p class="ilan-fiyat">
+                                @advert.Price TL
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="container d-flex justify-content-center">
+        <a style="padding: 1rem 1.5rem" href="" class="animation-top hide fast button-user-dark ">Tümünü Gör</a>
+    </div>
+}
+@foreach (MainPageContent content in mainPage.Contents)
+{
+    @if (content.BackgroundImagePath != null)
+    {
+        <div class='image-section mt-5 @(((bool)content.BackgorundFilterIsWhite) ? "after-white" : "")' style="background-image: url('@content.BackgroundImagePath');background-attachment: fixed;">
+            <div class="container image-section-content">
+                <div class="text-center fadeA hide">
+                    <h3 class="title" style="color:#fff">@content.ContentTitle</h3>
+                </div>
+                <div class="link-carts d-flex" style="justify-content: space-evenly;">
+                    @for(int i = 0; i < content.LinkBoxes.Count; i++)
+                    {
+                        @if ((bool)content.LinkBoxesIsBlack)
+                        {
+                            <a href="@content.LinkBoxes[i].Link" class="link-cart animation-left hide delay@(i)">
+                                <div class="img">
+                                    <img src="@content.LinkBoxes[i].ImagePath" alt="">
+                                </div>
+                                <div class="link-hover"></div>
+                                <div class="link-title">
+                                    <p class="mb-0">@content.LinkBoxes[i].Title</p>
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@content.LinkBoxes[i].Link" class="link-cart-zoom animation-left hide delay@(i)" style="border: 1px solid #db8e00!important;">
+                                <div class="img">
+                                    <img src="@content.LinkBoxes[i].ImagePath" alt="">
+                                </div>
+                                <div class="link-zoom-title">
+                                    <p class="mb-0">@content.LinkBoxes[i].Title</p>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+                @if (content.BackgroundImagePath != null)
+                {
+                    @if (content.ButtonText != null)
+                    {
+                        <div class="text-center w-100 my-4 mt-5">
+                            <a style="padding: 1rem 2.5rem;color:#fff" href="@content.ButtonLink" class="animation-top hide fast button-user-orange-outline">@content.ButtonText</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    @if (content.ButtonText != null)
+                    {
+                        <div class="text-center w-100 my-4 mt-5">
+                            <a style="padding: 1rem 2.5rem;" href="@content.ButtonLink" class="animation-top hide fast button-user-dark">@content.ButtonText</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mb-5">
+            <div class="container image-section-content">
+                <div class="recomendets text-center">
+                    <h3>@content.ContentTitle</h3>
+                </div>
+                <div class="link-carts d-flex" style="justify-content: space-evenly;">
+                    @for(int i = 0; i < content.LinkBoxes.Count; i++)
+                    {
+                        @if ((bool)content.LinkBoxesIsBlack)
+                        {
+                            <a href="@content.LinkBoxes[i].Link" class="link-cart animation-left hide delay@(i)">
+                                <div class="img">
+                                    <img src="@content.LinkBoxes[i].ImagePath" alt="">
+                                </div>
+                                <div class="link-hover"></div>
+                                <div class="link-title">
+                                    <p class="mb-0">@content.LinkBoxes[i].Title</p>
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@content.LinkBoxes[i].Link" class="link-cart-zoom animation-left hide delay@(i)">
+                                <div class="img">
+                                    <img src="@content.LinkBoxes[i].ImagePath" alt="">
+                                </div>
+                                <div class="link-zoom-title">
+                                    <p class="mb-0">@content.LinkBoxes[i].Title</p>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+                @if (content.BackgroundImagePath != null)
+                {           
+                    @if (content.ButtonText != null){
+                        <div class="text-center w-100 my-4 mt-5">
+                            <a style="padding: 1rem 2.5rem;" href="@content.ButtonLink" class="animation-top hide fast button-user-orange-outline">@content.ButtonText</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    @if (content.ButtonText != null){
+                        <div class="text-center w-100 my-4 mt-5">
+                            <a style="padding: 1rem 2.5rem;" href="@content.ButtonLink" class="animation-top hide fast button-user-dark">@content.ButtonText</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        
+    }
+    <div class="econtent-75"></div>
+}
+
+
+<div class="image-section after-smoke" style="padding:4rem;background-image: url('@mainPage.NumericDatasImagePath');background-attachment: fixed;">
+    <div class="container image-section-content">
+        <div class="text-center animation-top hide">
+            <h3 class="title ">Sayılarla Biz</h3>
+        </div>
+        <div class="link-carts d-flex animation-top hide numerics" style="justify-content: space-evenly;">
+            <div class="d-flex align-items-center flex-column">
+                <div class="numeric-icon">
+                    <i class="fa-solid fa-user numerics-feature"></i>
+                </div>
+                <div class="numeric-value">
+                    <span class="num" akhi="@mainPage.CustomerCount">0</span>
+                    <span>+</span>
+                </div>
+                <div class="numeric-small">
+                    <p class="mb-0"> Kullanıcı</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center flex-column">
+                <div class="numeric-icon">
+                    <i class="fa-solid fa-location-pin numerics-feature"></i>
+                </div>
+                <div class="numeric-value">
+                    <span class="num" akhi="@mainPage.CityCount">0</span>
+                    <span>+</span>
+                </div>
+                <div class="numeric-small">
+                    <p class="mb-0"> Şehir</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center flex-column">
+                <div class="numeric-icon">
+                    <i class="fa-solid fa-handshake numerics-feature"></i>
+                </div>
+                <div class="numeric-value">
+                    <span class="num" akhi="@mainPage.StreamerCount">0</span>
+                    <span>+</span>
+                </div>
+                <div class="numeric-small">
+                    <p class="mb-0"> Yayıncı</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

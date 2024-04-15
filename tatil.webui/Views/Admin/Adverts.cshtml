@@ -1,0 +1,43 @@
+﻿@using tatil.entity.Advert
+@model List<Advert>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>Kullanıcı İlanları</h2>
+    </div>
+    <form class="col" style="text-align:right">
+        <div class="col-md-12" style="text-align:right">
+            <input type="text" name="Search" placeholder="Ara.." class="form-control" style="width: 30%;display: inline;height: 40px;">
+            <button class="btn btn-success text-white" style="height: 40px;margin-left: -0.2rem;"><i class="mdi mdi-magnify"></i></button>
+        </div>
+    </form>
+</div>
+<table class="table table-hover" style="background-color:#fff">
+    <thead>
+    <tr>
+        <th scope="col">Resim</th>
+        <th scope="col">Başlık</th>
+        <th scope="col">Durum</th>
+        <th scope="col">Yayıncı</th>
+        <th scope="col" width="200"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (Advert advert in Model)
+    {
+        <tr>
+            <td><img src="@advert.AdvertImages[0].Path" width="200"></td>
+            <td>@advert.Title</td>
+            <td>@(advert.IsActive ? "Yayına Açık" : "Yayına Kapalı")</td>
+            <td>@advert.Publisher</td>
+            <td>
+                <a href="/admin/editAdvert/@advert.Id">Düzenle</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,302 @@
+﻿@using Newtonsoft.Json
+@using System.Text.RegularExpressions
+@using tatil.entity.Advert
+@using tatil.entity.Category
+@using tatil.entity.EntityReferences.Advert
+@using tatil.entity.Filter
+@model AdvertListingModel
+@{
+    string filterIds = JsonConvert.SerializeObject(Model.FilterIds);
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/address.js"></script>
+    <script src="~/js/country1.js"></script>
+    <script src="~/js/query.manager.js"></script>
+    <script>var query = new Query('applyQuery', '@ViewData["Category"]', '@Html.Raw(filterIds)', '@Html.Raw(Model.City)', '@Html.Raw(Model.District)', '@Html.Raw(Model.Neigh)', @Model.BedCount, @Model.HumanCount, '@Model.SearchValue', @Model.ActivePage); </script>
+    <script>
+        function ChangeCityAndUpdateQuery(self) {
+            changeCity(self); 
+            query.updateCity(self, '@ViewData["Category"]');
+        }
+        function ChangeDistrictAndUpdateQuery(self) {
+            changeDistrict(self);
+            query.updateDisct(self, '@ViewData["Category"]')
+        }
+        getCities("GetAllCities", '@Html.Raw(Model.City)', '@Html.Raw(Model.District)', '@Html.Raw(Model.Neigh)');
+
+        function openFilters(){
+            document.querySelector(".filter-side").classList.toggle("active");
+        }
+    </script>
+}
+@section Styles{
+    <style>
+        .ilan-icerik {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ilan-bilgi {
+            position: absolute;
+            bottom: 28px;
+            left: 0;
+            width: 100%;
+            padding: .4rem .5rem;
+            background-color: #141414b0;
+            color: #fff;
+            font-family: 'quicksand';
+        }
+
+        .ilan-baslik {
+            font-family: 'Josefin Sans';
+            font-weight: 400;
+            font-size: 1.15rem;
+        }
+
+        .ilan-ikonlari {
+            position: absolute;
+            top: 10px;
+            right: -70px;
+            transition: .3s;
+        }
+
+        .ilan-ikonu {
+            color: #db8e00;
+            background-color: #fff;
+            border-radius: 50%;
+            height: 35px;
+            width: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+
+        .ilan-icerik:hover .ilan-ikonlari{
+            right: 10px;
+        }
+        .ilan{
+            width: 380px;
+        }
+        .ilan-resim {
+            width: 380px;
+            height: 300px;
+            object-fit: cover;
+        }
+        .ilan-fiyat{
+            font-family: 'quicksand';
+            font-weight: 600;
+            background-color: #db8e00;
+            font-size: 1.1rem;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0 0 6px 6px;
+            color: #fff;
+        }
+    </style>
+}
+    @functions{
+    public string Capitalize(string str)
+    {
+        var result = $"{char.ToUpper(str[0])}";
+        for (int i = 1; i < str.Count(); i++)
+        {
+            result += char.ToLower(str[i]);
+        }
+        return result;
+    }
+
+        private List<Filter> SortByNumericOrAlpha(List<Filter> list)
+        {
+            List<Filter> ordered;
+            if (Regex.IsMatch($"{list[0].FilterTitle[0]}", @"^\d+$"))
+            {
+                ordered = list.OrderBy(s => int.Parse(Regex.Match(s.FilterTitle, @"\d+").Value)).ToList();
+            }
+            else
+            {
+                ordered = list.OrderBy(x => x.FilterTitle).ToList();
+            }
+            return ordered;
+        }
+}
+
+<div class="sub-header-sm" style="background-image: url('/img/subheader2.jpg');">
+    <div class="container sub-header-content">
+        <h2 class="pb-0 sub-header-title">Tatil Evleri</h2>
+        <p class="pb-0">Hayalinizdeki tatil için sizlere layık uygun fiyatlı konforlu güvenli ve gösterişli evleri kaçırmayın!</p>
+    </div>
+</div>
+
+<section class="d-flex container mt-4 adverts-content-page">
+    <aside class="filter-side filter-side-box p-3">
+        <div onclick="openFilters()" class="tilte d-flex justify-content-between">
+            <h5 class="border-bottom">Filtrele</h5>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="border-bottom mt-3 pb-4">
+            <div class="d-flex flex-column">
+                <p class="medium mb-0">Konum</p>
+                <select onchange="ChangeCityAndUpdateQuery(this)" id="cities" class="select-user">
+                    <option value="" disabled selected hidden>Şehir</option>
+                </select>
+            </div>
+            <div class="mt-1 d-flex flex-column">
+                <select disabled onchange="ChangeDistrictAndUpdateQuery(this)" id="districts" class="select-user">
+                    <option value="" disabled selected hidden>İlçe</option>
+                </select>
+            </div>
+            <div class="mt-1 d-flex flex-column">
+                <select disabled id="neighborhood" class="select-user" onchange="query.updateNeigh(this, '@ViewData["Category"]')" >
+                    <option value="" disabled selected hidden>Mahalle</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filterbox border-bottom mt-3" id="heading">
+            <a class="filterbox-title" data-toggle="collapse" href="#collapseExample" role="button">
+                Kategoriler
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            <ul class="collapse show p-0 filterbox-filters" id="collapseExample">
+                @foreach(Category category in Model.Categories)
+                {
+                    <li>
+                        <a class="custom-control-label filter-link" href="/@category.Url" for="filter.Id">@category.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="mt-3 border-bottom pb-4">
+            <div>
+                <label class="medium d-flex justify-content-between" for="filter.Id">
+                    <span>Aranacak Kelime</span> 
+                    <i class="fa-solid fa-search"></i>
+                </label>
+                <input  class="input-user w-100" type="text" id="filter.Id" name="searchValue" value="@Model.SearchValue"  onkeyup="query.updateSearchQuery(this, '@ViewData["Category"]')">
+            </div>
+        </div>
+        <div class="mt-3 border-bottom pb-4">
+            <div>
+                <label class="medium d-flex justify-content-between" for="filter.Id">
+                    <span>İnsan Kapasitesi</span> 
+                    <i class="ml-1 fa-solid fa-person"></i>
+                </label>
+                <input  class="input-user w-100" type="text" id="filter.Id" name="filterIds" value="@(Model.HumanCount > 0 ? Model.HumanCount : "")" onkeyup="query.updateHumanInput(this, '@ViewData["Category"]')">
+            </div>
+        </div>
+        <div class="mt-3 border-bottom pb-4">
+            <div>
+                <label class="medium d-flex justify-content-between" for="filter.Id">
+                    <span>Yatak Kapasiyesi</span> 
+                    <i class="fa-solid fa-bed"></i>
+                </label>
+                <input  class="input-user w-100" type="text" id="filter.Id" name="filterIds"value="@(Model.BedCount > 0 ? Model.BedCount : "")"  onkeyup="query.updateBedInput(this, '@ViewData["Category"]')">
+            </div>
+        </div>
+        @for (int i=0;i<Model.Filters.Count;i++)
+        {            
+            <div class="filterbox border-bottom mt-3" id="heading@(i)">
+                <a class="filterbox-title" data-toggle="collapse" href="#collapseExample@(i)" role="button">
+                    @Model.Filters[i].FilterBoxTitle
+                    <i class="fa-solid fa-chevron-down"></i>
+                </a>
+                @{
+                        var filters = SortByNumericOrAlpha(Model.Filters[i].Filters);
+                        var filterIsNullOrEmpty = filters.Where(f => filterIds.Contains(f.Id.ToString())).ToList();
+                }
+                <ul class="collapse p-0 filterbox-filters @(filterIsNullOrEmpty.Count != 0 ? "show" : "")" id="collapseExample@(i)">
+                    @foreach(Filter filter in filters)
+                    {
+                        <li class="custom-control custom-checkbox">
+                            <input  class="custom-control-input" type="checkbox" id="@filter.Id" name="filterIds"
+                            @(Model.FilterIds.Contains(filter.Id.ToString()) ? "checked" : "") onchange="query.updateFilterIds(this, '@filter.Id','@ViewData["Category"]')">
+                            <label class="custom-control-label filter-link" for="@filter.Id">@filter.FilterTitle</label>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        <a class="user-button-orange w-100 d-block text-center mt-2" id="applyQuery">Uygula</a>
+    </aside>
+    <div class="content w-100">
+        @if (Model.TotalPageCount > 0)
+        {
+            <div class="ml-3 border-bottom pb-1">
+                <p class="medium" style="color:#000">@Model.TotalItemCount sonuç içerisinden @((Model.ActivePage-1) * (Model.TotalItemCount / Model.TotalPageCount))-@(((Model.ActivePage-1) * (Model.TotalItemCount / Model.TotalPageCount)) + Model.Adverts.Count) arası gösteriliyor</p>
+            </div>
+        }
+        <div class="ilanlar mt-2 d-flex flex-wrap mb-2">
+            @foreach(Advert advert in Model.Adverts)
+            {
+                <a class="ilan ml-3 mb-3" href="/@advert.Categories[0].Url/@advert.Url">
+                    <div class="ilan-icerik">
+                        <img src="@advert.AdvertImages.OrderBy(a => a.Index).ToList()[0].Path" class="ilan-resim">
+                        <div class="ilan-bilgi medium">
+                            <div class="d-flex justify-content-between">
+                                <div class="ellipsis w-50">
+                                    <i class="fa-solid fa-location-dot mr-1"></i> @Capitalize(advert.City)/@Capitalize(advert.District)
+                                </div>
+                                <div class="w-50 ellipsis text-right">
+                                    <span class="ellipsis">
+                                        <i class="fa-solid fa-bed mr-1"></i> @advert.BedCapacity Yatak
+                                    </span>
+                                    <span class="ellipsis">
+                                        <i class="fa-solid fa-user-group ml-2 mr-1"></i> @advert.HumanCapacity Kişi
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ilan-ikonlari d-flex flex-column">
+                            <div class="ilan-ikonu">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="ilan-baslik text-dark ellipsis">
+                                @advert.Title
+                            </div>
+                            <p class="ilan-fiyat">
+                                @advert.Price TL
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+        @if (Model.TotalPageCount > 1)
+        {
+            <div class="paging ml-3">
+                <div class="active-page d-flex gray">
+                    @if (Model.ActivePage-1 > 1){
+                        <div onclick="query.updatePage(@(Model.ActivePage-2), '@ViewData["Category"]')">
+                            <a class="paging-link mr-2">@(Model.ActivePage-2)</a>
+                        </div>
+                    }
+                    @if (Model.ActivePage > 1){
+                        <div onclick="query.updatePage(@(Model.ActivePage-1), '@ViewData["Category"]')">
+                            <a class="paging-link mr-2">@(Model.ActivePage-1)</a>
+                        </div>
+                    }
+                    <div onclick="query.updatePage(@(Model.ActivePage), '@ViewData["Category"]')">
+                        <a class="active">@Model.ActivePage</a>
+                    </div>
+                    @if (Model.ActivePage < Model.TotalPageCount){
+                        <div onclick="query.updatePage(@(Model.ActivePage+1), '@ViewData["Category"]')">
+                            <a class="ml-2 paging-link">@(Model.ActivePage+1)</a>
+                        </div>
+                    }
+                    @if (Model.ActivePage+1 < Model.TotalPageCount){
+                        <div onclick="query.updatePage(@(Model.ActivePage+2), '@ViewData["Category"]')">
+                            <a class="ml-2 paging-link">@(Model.ActivePage+2)</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

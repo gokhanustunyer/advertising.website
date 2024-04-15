@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using tatil.entity.Identity
+@model List<AppUser>
+@inject UserManager<AppUser> _userManager
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles{
+    <style>
+        li{
+            list-style: none;
+        }
+        li label{
+            margin-bottom: 0
+        }
+        li ul{
+            margin-left:.6rem;
+        }
+        ul .form-check{
+            margin-bottom:0;
+        }
+        ol, ul{
+            padding-left: 0;
+        }
+        .filter-result{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+}
+
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>Kullanıcılar</h2>
+    </div>
+</div>
+
+<table class="table table-hover" style="background-color:#fff">
+  <thead>
+    <tr>
+        <th scope="col">Tam Ad</th>
+        <th scope="col">E-Posta</th>
+        <th scope="col">Telefon</th>
+        <th scope="col">İlan Verebilir</th>
+        <th scope="col">Rol</th>
+        <th scope="col" width="150"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @{
+    @foreach(AppUser user in Model)
+        {
+            var role = await _userManager.GetRolesAsync(user);
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+                <td>@(user.isConfirmedForAdverts ? "Evet" : "Hayır")</td>
+                <td>@role[0]</td>
+                <td>
+                    <a href="/admin/edituser/@user.Id" 
+                    class="btn btn-sm btn-primary">Düzenle</a>
+                </td>
+            </tr>
+        }
+    }
+  </tbody>
+</table>

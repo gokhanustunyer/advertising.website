@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tatil.webui", "tatil.webui\tatil.webui.csproj", "{8C88C292-850E-4A24-B881-38ED26AC5155}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tatil.data", "tatil.data\tatil.data.csproj", "{56675E2A-8CE3-4258-9ACB-CF545B93076F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tatil.business", "tatil.business\tatil.business.csproj", "{6018C152-AA11-441D-BE4A-5A024A045A84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tatil.entity", "tatil.entity\tatil.entity.csproj", "{F08D713E-268C-44B5-8FE9-2C37FDFB1F8D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C88C292-850E-4A24-B881-38ED26AC5155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C88C292-850E-4A24-B881-38ED26AC5155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C88C292-850E-4A24-B881-38ED26AC5155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C88C292-850E-4A24-B881-38ED26AC5155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56675E2A-8CE3-4258-9ACB-CF545B93076F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56675E2A-8CE3-4258-9ACB-CF545B93076F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56675E2A-8CE3-4258-9ACB-CF545B93076F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56675E2A-8CE3-4258-9ACB-CF545B93076F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6018C152-AA11-441D-BE4A-5A024A045A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6018C152-AA11-441D-BE4A-5A024A045A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6018C152-AA11-441D-BE4A-5A024A045A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6018C152-AA11-441D-BE4A-5A024A045A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F08D713E-268C-44B5-8FE9-2C37FDFB1F8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F08D713E-268C-44B5-8FE9-2C37FDFB1F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F08D713E-268C-44B5-8FE9-2C37FDFB1F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F08D713E-268C-44B5-8FE9-2C37FDFB1F8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0462BCF0-27EC-482C-8451-F884B26E2AC7}
+	EndGlobalSection
+EndGlobal

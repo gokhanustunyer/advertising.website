@@ -1,0 +1,198 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using tatil.business.Abstract.Service
+@using tatil.entity.Identity
+@using tatil.entity.Statics
+@inject UserManager<AppUser> _userManager
+@inject IPageStringsService _pageStringsService
+@inject ISeoService _seoService
+@{
+    PageStrings pageStrings = _pageStringsService.GetSettings();
+    bool isOpenForAdverts = (User.Identity.IsAuthenticated) ? (await _userManager.FindByNameAsync(User.Identity.Name)).isConfirmedForAdverts : false;
+    string path = Context.Request.Path;
+    SEO seo = _seoService.GetByUrl(path);
+    string title, description, keywords, author, publisher;
+    if (seo != null)
+    {
+        title = seo.Title;
+        description = seo.Description;
+        keywords = seo.Keywords;
+        author = seo.Author;
+        publisher = seo.Publisher;
+    }
+    else
+    {
+        title = "tatilimibuldum.com | uygun fiyatlara aradığınız evi kolayca kiralayın";
+        description = "tatilimibuldum.com | uygun fiyatlara aradığınız evi kolayca kiralayın";
+        keywords = "villa,kirala,tatil,sepet,uygun,otel,oda,kiralık,metrekare,havuz,havuzlu";
+        author = "tatilimibuldum.com";
+        publisher = "tatilimibuldum.com";
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Html.Raw(title)</title>
+    <meta name="description" content="@Html.Raw(description)">
+    <meta name="keywords" content="@Html.Raw(keywords)">
+    <meta name="author" content="@Html.Raw(author)">
+    <meta name="publisher" content="@Html.Raw(publisher)">
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;500;600;700&family=Josefin+Sans:wght@100;200;400&family=Open+Sans:wght@300;400;600;700&family=Quicksand:wght@300;400;500;600;700&family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/utilities.css"/>
+    @await RenderSectionAsync("Styles", required:false)
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white" style="border-bottom:1px solid #dfdfdf">
+            <div class="container d-flex navbar-div" style="justify-content: space-between;">
+                <a class="navbar-brand logo-font" href="/">tatilimibuldum.com</a>
+                <div class="navbar-links w-50 text-right navbar-desktop-links">
+                    <a class='navbar-link @(path == "/" ? "active_link": "")' href="/">Ana Sayfa</a>
+                    <a class='navbar-link @(path == "/tatil-evleri" ? "active_link": "")' href="/tatil-evleri">Tatil Evleri</a>
+                    <a class='navbar-link @(path == "/hakkimizda" ? "active_link": "")' href="/hakkimizda">Hakkımızda</a>
+                    @*<a class='navbar-link @(path == "/iletisim" ? "active_link": "")' href="/iletisim">İletişim</a>*@
+                </div>
+                <div class="justify-content-end navbar-desktop-links" id="navbarText">
+                    @if (User.Identity.Name != null)
+                    {
+                        <a class="navbar-text navbar-icon" style="font-family:'quicksand', sans-serif;" href="/user/profile">
+                          <i class="fa-regular fa-user mr-1"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="navbar-text navbar-icon" style="font-family:'quicksand', sans-serif;" href="/giris">
+                          <i class="fa-regular fa-user"></i>
+                        </a>
+                    }
+                    @if (!isOpenForAdverts)
+                    {
+                        <a class="navbar-text navbar-icon" style="color: #db8e00!important" href="/user/sendadvertrequest">
+                            <i class="fa-solid fa-plus"></i>
+                            <span class="ml-1">İlan Ver</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="navbar-text navbar-icon" style="color: #db8e00!important" href="/user/newadvert">
+                            <i class="fa-solid fa-plus"></i>
+                            <span class="ml-1">İlan Ver</span>
+                        </a>
+                    }
+                </div>
+                <div onclick="toogleButton()" class="mobile-menu-button">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+            <div class="mobile-menu">
+                <div class="navbar-links container d-flex flex-column">
+                    <a class='navbar-link @(path == "/" ? "active_link": "")' href="/">Ana Sayfa</a>
+                    <a class='navbar-link @(path == "/tatil-evleri" ? "active_link": "")' href="/tatil-evleri">Tatil Evleri</a>
+                    <a class='navbar-link @(path == "/hakkimizda" ? "active_link": "")' href="/hakkimizda">Hakkımızda</a>
+                    @*<a class='navbar-link @(path == "/iletisim" ? "active_link": "")' href="/iletisim">İletişim</a>*@
+                    @if (User.Identity.Name != null)
+                    {
+                        <a class="navbar-text navbar-icon" style="font-family:'quicksand', sans-serif;" href="/user/profile">
+                          <i class="fa-regular fa-user mr-1"></i> Hesabım
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="navbar-text navbar-icon" style="font-family:'quicksand', sans-serif;" href="/giris">
+                          <i class="fa-regular fa-user"></i> Hesabım
+                        </a>
+                    }
+                    @if (!isOpenForAdverts)
+                    {
+                        <a class="navbar-text navbar-icon" style="color: #db8e00!important" href="/user/sendadvertrequest">
+                            <i class="fa-solid fa-plus"></i>
+                            <span class="ml-1">İlan Ver</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="navbar-text navbar-icon" style="color: #db8e00!important" href="/user/newadvert">
+                            <i class="fa-solid fa-plus"></i>
+                            <span class="ml-1">İlan Ver</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    @await RenderSectionAsync("SubHeader", required:false)
+    <main>
+        @RenderBody()
+    </main>
+
+
+    <footer class="footer mt-4">
+        <div class="container py-4 d-flex justify-content-between">
+            <div class="row">
+                <div class="col-sm">
+                    <a href="/" class="navbar-brand logo-font w-100">
+                        tatilimibuldum.com
+                    </a>
+                    <p class="footer-gray">@pageStrings.FooterDescription</p>
+                </div>
+                <div class="col-sm ml-5 ml-2">
+                    <h6 class="footer-links-title">Menü</h6>
+                    <div class="d-flex flex-column footer-links">
+                        <a href="" class="footer-link">Ana Sayfa</a>
+                        <a href="" class="footer-link">Tatil Evleri</a>
+                        <a href="" class="footer-link">Hakkımızda</a>
+                        <a href="" class="footer-link">Üye Girişi</a>
+                        <a href="" class="footer-link">İlan Ver</a>
+                    </div>
+                </div>
+                <div class="col-sm ml-5 ml-2 footer-gray">
+                    <h6 class="footer-links-title">İletişim</h6>
+                    <p>Adres: @pageStrings.ContactAddress</p>
+                    <p>E-Posta Adresi: @pageStrings.EmailAddress</p>
+                    <p>Whatsapp Numarası: @pageStrings.WPNumber</p>
+                    <p>Telefon : @pageStrings.PhoneNumber</p>
+                </div>
+                <div class="col-sm ml-5 ml-2 footer-gray d-flex flex-column">
+                    <h6 class="footer-links-title">Sosyal Medya</h6>
+                    <div class="d-flex flex-column footer-links">
+                        <a href="@pageStrings.TwitterLink" class="footer-link"><i class="fa-brands fa-twitter"></i> Twitter</a>
+                        <a href="@pageStrings.InstagramLink" class="footer-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                        <a href="@pageStrings.FacebookLink" class="footer-link"><i class="fa-brands fa-facebook"></i> Facebook</a>
+                        <a href="https://wa.me/@pageStrings.WPNumber" class="footer-link"><i class="fa-brands fa-whatsapp"></i> Whatsapp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright border-top">
+            <div class="container text-center">
+                <p class="p-3" style="padding-bottom:0!important">
+                    <span style="color:#6f6f6f">Copyright ©2023 - </span>
+                    <span style="color:#db8e00">tatilimibuldum.com</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/2245e9a8b0.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        function toogleButton(){
+            document.querySelector(".mobile-menu").classList.toggle("active");
+            document.querySelectorAll(".mobile-menu-button .bar").forEach(b => b.classList.toggle("active"));
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

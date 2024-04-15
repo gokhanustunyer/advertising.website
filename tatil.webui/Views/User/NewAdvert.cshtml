@@ -1,0 +1,198 @@
+﻿@using tatil.entity.Category
+@using tatil.entity.EntityReferences.Advert.Create
+@using tatil.entity.Filter
+@model AdvertCreateModel
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+@section SubHeader{
+    <div class="sub-header-sm" style="background-image: url('/img/subheader2.jpg');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">Yeni İlan Oluştur</h2>
+            <p style="font-size: 1rem;">Müşterilerinize sunduğunuz içeriği genişletmek için yeni ilanlar ekleyin. Daha fazla kişiye hitap ederek ağınızı genişletin. İlanlarla ilgili sorunlarınızı hakkımızda kısmındaki formdan bildirebilirsiniz.</p>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/froala_editor.pkgd.min.js"></script>
+    <script src="~/js/address.js"></script>
+    <script src="~/js/country.js"></script>
+    <script>
+        let fileInput = document.getElementById("file-input");
+        let numOfFiles = document.getElementById("num-of-files");
+        fileInput.addEventListener("change", () => {
+            numOfFiles.textContent = `${fileInput.files.length} Dosya Seçildi`;
+        });
+    </script>
+    <script>
+        new FroalaEditor('#Description', {
+            imageUploadParam: 'image_param',
+            imageUploadURL: '/home/uploadImage',
+            imageUploadMethod: 'POST',
+            imageMaxSize: 5 * 1024 * 1024,
+            imageAllowedTypes: ['jpeg', 'jpg', 'png', 'webp', 'avif'],
+        });
+        new FroalaEditor('#ShortDescription', {
+            events: {
+                'image.beforeUpload': function(img) {
+                }
+            }
+        });
+    </script>
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/froala_editor.pkgd.min.css">
+    <style>
+        .input-user{
+            padding: .4rem .35rem;
+        }
+        input[type="file"] {
+          display: none;
+        }
+        .file-label {
+            position: relative;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: .95rem;
+            font-weight: 500;
+            text-align: center;
+            width: 250px;
+            padding: 0.75rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+    </style>
+}
+@section Errors{
+    <div class="mt-3 data-annotations container">
+        <div asp-validation-summary="All"></div>
+        <ul>@Html.Raw(TempData["Errors"])</ul>
+    </div>
+}
+
+<form enctype="multipart/form-data" method="post" class="ml-3 container mb-5 p-3" style="border:1px solid #dfdfdf">
+  <h5 class="medium-title w-100 border-bottom pb-2 orange">Yeni İlan</h5>
+  <div class="form-group mt-3">
+    <label for="Title">İlan Başlığı</label>
+    <input name="Title" id="Title" class="input-user w-100 d-block">
+  </div>
+  <div class="form-group">
+    <label for="PhoneNumber">Telefon Numarası</label>
+    <input name="PhoneNumber" id="PhoneNumber" class="input-user w-100 d-block">
+  </div>
+
+    <div class="row">
+        <div class="col-sm">
+            <div class="login-cart mt-3">
+              <div class="form-group">
+                <label for="size">Net (m<sup>2</sup>)</label>
+                <input name="Size" id="size" class="input-user w-100 d-block">
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="login-cart mt-3">
+              <div class="form-group">
+                <label for="Price">Fiyat</label>
+                <input name="Price" id="Price" class="input-user w-100 d-block">
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <div class="login-cart mt-3">
+              <div class="form-group">
+                <label for="HumanCapacity">İnsan Kapasitesi</label>
+                <input name="HumanCapacity" class="input-user w-100 d-block" id="HumanCapacity">
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="login-cart mt-3">
+              <div class="form-group">
+                <label for="BedCapacity">Yatak Kapasitesi</label>
+                <input name="BedCapacity" class="input-user w-100 d-block" id="BedCapacity">
+              </div>
+            </div>
+        </div>
+    </div>
+  <div class="form-group">
+    <label for="ShortDescription">Kısa (Üst) Açıklama</label>
+    <br>
+    <small class="smoke">Buraya resim yüklemeye çalışmayınız</small>
+    <textarea name="ShortDescription" id="ShortDescription"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="Description">Açıklama</label>
+    <textarea name="Description" id="Description"></textarea>
+  </div>
+  <div>
+  <div class="row">
+    <div class="col-sm">
+        <div class="form-group">
+            <small style="color:#b0b0b0">Şehir</small>
+            <select name="City" class="custom-select rounded-0" onchange="changeCity(this)" id="cities"></select>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="form-group">
+            <small style="color:#b0b0b0">İlçe</small>
+            <select name="District" class="custom-select rounded-0" disabled 
+            onchange="changeDistrict(this)" id="districts"></select>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="form-group">
+            <small style="color:#b0b0b0">Mahalle</small>
+            <select disabled name="Neighborhood" class="custom-select rounded-0" id="neighborhood"></select>
+        </div>
+    </div>
+  </div>
+  </div>
+  <h6 class="small-title border-bottom pb-2 mt-3 #db8e00">Filtreler</h6>
+  <div class="form-group d-flex flex-wrap">
+    @for(int i=0;i<Model.FilterBoxes.Count;i++)
+    {
+        <div class="category-box h-100 mt-4 mr-2" id="heading@(i)" style="cursor:pointer;border: 1px solid #dfdfdf;padding: .5rem;">
+            <a class="d-flex justify-content-between" data-toggle="collapse" data-target="#filterBox@(i)">
+                <p class="filter-title mb-0 smoke">@Model.FilterBoxes[i].FilterBoxTitle</p>
+                <i class="ml-2 fa-solid fa-chevron-down d-flex align-items-center"></i>
+            </a>
+            @{
+                    <ul id="filterBox@(i)" class="hover-scroll-170 pl-0 collapse filter-box" data-parent="#heading@(i)">
+                        @foreach(Filter filter in Model.FilterBoxes[i].Filters)
+                {
+                            <li class="my-2 custom-control custom-checkbox">
+                                <input  class="custom-control-input" type="checkbox" id="@filter.Id" name="FilterIds" value="@filter.Id">
+                                <label class="custom-control-label filter-link" for="@filter.Id">@filter.FilterTitle</label>
+                            </li>
+                }
+                     </ul>
+            }
+        </div>
+    }
+  </div>
+  <h6 class="small-title border-bottom pb-2 mt-5">Kategoriler</h6>
+  <div class="form-group">
+    @foreach(Category category in Model.Categories)
+    {
+      <ul class="mr-3 pl-0">
+          <li class="my-2 custom-control custom-checkbox">
+              <input class="custom-control-input" type="checkbox" value="@category.Id" id="@category.Id" name="CategoryIds">
+              <label class="custom-control-label filter-link" for="@category.Id">@category.Name</label>
+          </li>
+      </ul>
+    }
+  </div>
+  <div class="d-flex flex-column mb-2 mt-3">
+      <input type="file" id="file-input" name="PostedFiles" multiple />
+      <label for="file-input" class="file-label"><i class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp; İlan Resimlerini Yükleyin</label>
+      <small id="num-of-files" class="small smoke">Dosya Seçilmedi</small>
+  </div>
+  <hr>
+  <button type="submit" class="mt-2 button-user-dark w-25">Gönder</button>
+</form>

@@ -1,0 +1,48 @@
+﻿@using tatil.entity.Statics
+@model List<SEO>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>SEO Link Listesi</h2>
+    </div>
+    <div class="col" style="text-align:right">
+        <a href="/admin/newseo" class="btn btn-success text-white"><i class="mdi mdi-plus"></i> Yeni SEO Ayarı</a>
+    </div>
+</div>
+<table class="table table-hover" style="background-color:#fff">
+    <thead>
+    <tr>
+        <th scope="col">Link</th>
+        <th scope="col">Başlık</th>
+        <th scope="col">Açıklama</th>
+        <th scope="col">Keywords</th>
+        <th scope="col">Author</th>
+        <th scope="col">Publisher</th>
+        <th scope="col" width="200"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (SEO seo in Model)
+    {
+        <tr>
+            <td>@seo.Url</td>
+            <td>@seo.Title</td>
+            <td>@seo.Description</td>
+            <td>@seo.Keywords</td>
+            <td>@seo.Author</td>
+            <td>@seo.Publisher</td>
+            <td>
+                <a href="/admin/updateseo/@seo.Id" class="btn btn-primary">Güncelle</a>
+                <form class="d-inline" method="post" action="/admin/deleteseo">
+                    <input hidden name="id" value="@seo.Id">
+                    <button href="/deleteseo/@seo.Id" class="btn btn-danger text-white">Sil</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

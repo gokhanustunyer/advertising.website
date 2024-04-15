@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts{}
+@section Styles{}
+<form class="mt-5 form-group" method="post" enctype="multipart/form-data">
+    <h2 style="padding: .5rem">Yeni Link Alanı</h2>
+    <small>Dört taneye kadar link girilebilir</small>
+    <div class="form-group mt-2 box-shadow">
+        <div class="col-md-12">
+            <label for="MainTitle" class="col-md-12">Genel Başlık</label>
+            <input type="text" name="MainTitle" id="MainTitle" class="form-control form-control-line" placeholder="Kategoriler">
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Birinci Link Kutusu</h4>
+        <div class="col-md-12">
+            <label for="Image1" class="col-md-12">Resim</label>
+            <input type="file" name="Image1" id="Image1">
+        </div>
+        <div class="col-md-12">
+            <label for="Title1" class="col-md-12">Başlık</label>
+            <input type="text" name="Title1" id="Title1" class="form-control form-control-line" placeholder="Özel Havuzlu Evler">
+        </div>
+        <div class="col-md-12">
+            <label for="Link1" class="col-md-12">Yönlendirilecek Link</label>
+            <input type="text" name="Link1" id="Link1" class="form-control form-control-line" placeholder="/ozel-havuzlu-evler">
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">İkinci Link Kutusu</h4>
+        <div class="col-md-12">
+            <label for="Image2" class="col-md-12">Resim</label>
+            <input type="file" name="Image2" id="Image2">
+        </div>
+        <div class="col-md-12">
+            <label for="Title2" class="col-md-12">Başlık</label>
+            <input type="text" name="Title2" id="Title2" class="form-control form-control-line">
+        </div>
+        <div class="col-md-12">
+            <label for="Link2" class="col-md-12">Yönlendirilecek Link</label>
+            <input type="text" name="Link2" id="Link2" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Üçüncü Link Kutusu</h4>
+        <div class="col-md-12">
+            <label for="Image3" class="col-md-12">Resim</label>
+            <input type="file" name="Image3" id="Image3">
+        </div>
+        <div class="col-md-12">
+            <label for="Title3" class="col-md-12">Başlık</label>
+            <input type="text" name="Title3" id="Title3" class="form-control form-control-line">
+        </div>
+        <div class="col-md-12">
+            <label for="Link3" class="col-md-12">Yönlendirilecek Link</label>
+            <input type="text" name="Link3" id="Link3" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Dördüncü Link Kutusu</h4>
+        <div class="col-md-12">
+            <label for="Image4" class="col-md-12">Resim</label>
+            <input type="file" name="Image4" id="Image4">
+        </div>
+        <div class="col-md-12">
+            <label for="Title4" class="col-md-12">Başlık</label>
+            <input type="text" name="Title4" id="Title4" class="form-control form-control-line">
+        </div>
+            <div class="col-md-12">
+            <label for="Link4" class="col-md-12">Yönlendirilecek Link</label>
+            <input type="text" name="Link4" id="Link4" class="form-control form-control-line">
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Arka Plan Ayarları (Resim ayarlamayacaksanız burayı geçin)</h4>
+        <div class="col-md-12">
+            <label for="BackgroundImage" class="col-md-12">Resim</label>
+            <input type="file" name="BackgroundImage" id="BackgroundImage">
+        </div>
+        <div class="col-md-12">
+            <h4 class="col-md-12">Arka Plan Filtresi</h4>
+            <input type="radio" id="siyah" name="BackgroundFilter" value="black">
+            <label for="siyah">Siyah</label>
+            <input type="radio" id="white" name="BackgroundFilter" value="white">
+            <label for="white">Beyaz</label>
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Link Kutusu Ayarları</h4>
+        <div class="col-md-12">
+            <h4 class="col-md-12">Fare Efekti</h4>
+            <input type="radio" id="zoom" name="LinkCartFilter" value="zoom">
+            <label for="zoom">Zoom</label>
+            <input type="radio" id="blackfilter" name="LinkCartFilter" value="blackfilter">
+            <label for="blackfilter">Siyah Filtre</label>
+        </div>
+    </div>
+    <div class="form-group mt-2 box-shadow">
+        <h4 class="col-md-12">Buton Ayarları (Buton Olmayacaksa Boş Geçin)</h4>
+        <div class="col-md-12">
+            <div class="col-md-12">
+                <label for="ButtonText" class="col-md-12">Buton Üzerindeki Yazı</label>
+                <input type="text" name="ButtonText" id="ButtonText" class="form-control form-control-line" placeholder="Tüm Sonuçlar">
+            </div>
+                <div class="col-md-12">
+                <label for="ButtonLink" class="col-md-12">Buton Linki</label>
+                <input type="text" name="ButtonLink" id="ButtonLink" class="form-control form-control-line" placeholder="/tatil-evleri">
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;display:block">Kaydet</button>
+</form>

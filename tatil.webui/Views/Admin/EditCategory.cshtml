@@ -1,0 +1,88 @@
+﻿@using tatil.entity.Category
+@model Category
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Filtre Düzenle";
+}
+@section Styles{
+    <style>
+        li{
+            list-style: none;
+        }
+        li label{
+            margin-bottom: 0
+        }
+        li ul{
+            margin-left:.6rem;
+        }
+        ul .form-check{
+            margin-bottom:0;
+        }
+        ol, ul{
+            padding-left: 0;
+        }
+    </style>
+}
+
+<div class="econtent-65"></div>
+<div class="create-product mt-4 mb-3 border-bottom">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="validation-box mb-2" asp-validation-summary="All"></div>
+    }
+    <div class="row" style="margin-top:2rem">
+        <div class="col">
+            <h2>Kategoriyi Düzenle</h2>
+        </div>
+        <div class="col" style="text-align:right">
+            <form method="post" action="/admin/deleteCategory">
+                <input hidden asp-for="Id">
+                <button class="btn btn-danger btn-sm text-white">Kategoriyi Sil</button>
+            </form>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" id="form">
+    <input asp-for="Id" id="prId" hidden/>
+        <div class="form">
+            <div class="form-group mt-3">
+                <label asp-for="Name" class="col-md-12">Kategori Adı</label>
+                <div class="col-md-12">
+                    <input type="text" asp-for="Name" class="form-control form-control-line">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;display:block">Değişklikleri Kaydet</button>
+        </div>
+    </form>
+</div>
+
+<div class="mt-4 mb-3">
+    <table class="table table-hover" style="background-color:#fff">
+        <thead>
+        <tr>
+            <th scope="col">Resim</th>
+            <th scope="col">Başlık</th>
+            <th scope="col" style="width:225px"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(var i = 0; i < @Model.Adverts.Count; i++)
+        {
+        <tr>
+            <td><img style="width:60px;" src="@Model.Adverts[i].AdvertImages[0].Path"></td>
+            <td>@Model.Adverts[i].Title</td>
+            <td>
+                <a href="/admin/editAdvert/@Model.Adverts[i].Id" 
+                class="btn btn-sm btn-primary">Düzenle</a>
+                <form method="post" action="/admin/removeAdvertFromCategory" style="display:inline">
+                    <input hidden value="@Model.Adverts[i].Id" name="advertId">
+                    <input hidden value="@Model.Id" name="categoryId">
+                    <button class="btn btn-sm btn-primary">
+                        <i class="mdi mdi-delete"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>

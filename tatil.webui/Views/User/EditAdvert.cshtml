@@ -1,0 +1,319 @@
+﻿@using tatil.entity.Advert
+@using tatil.entity.Category
+@using tatil.entity.Filter
+@using tatil.entity.Identity
+@model Advert
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    List<FilterBox>? Filterboxes = ViewBag.Filterboxes;
+    List<Category>? Categories = ViewBag.Categories;
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/froala_editor.pkgd.min.js"></script>
+    <script src="~/js/image.upload.js"></script>
+    <script src="~/js/address.js"></script>
+    <script src="~/js/country.js"></script>
+    <script>const imageManager = new ImageManager('images','@Model.Id');</script>
+    <script> getCities("GetAllCities", "@Html.Raw(Model.City)", "@Html.Raw(Model.District)", "@Html.Raw(Model.Neighbourhood)"); </script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+    <script>
+        new FroalaEditor('#Description', {
+            imageUploadParam: 'image_param',
+            imageUploadURL: '/home/uploadImage',
+            imageUploadMethod: 'POST',
+            imageMaxSize: 5 * 1024 * 1024,
+            imageAllowedTypes: ['jpeg', 'jpg', 'png', 'webp', 'avif'],
+        });
+        new FroalaEditor('#ShortDescription', {
+        events: {
+            'image.beforeUpload': function(img) {
+            }
+        }
+        });
+    </script>
+}
+@section Styles{
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/froala_editor.pkgd.min.css">
+    <style>
+        .form-group{
+            padding: 1rem 0rem;
+            margin-bottom: 0;
+        }
+        ul, li{
+            list-style: none;
+        }
+        select:focus-visible{outline:none!important}
+        .category-box{
+            cursor: pointer;
+            padding: 0.5rem;
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+            border-radius: 5px;
+            margin-right: 1rem;
+            height: 100%;
+        }
+        .admin-select{
+            width: 100%;
+            border: 1px solid #dfdfdf;
+            padding: 0.5rem 0.25rem;
+        }
+        .dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #222222c3;
+            width: 100%;
+            height: 100vh;
+            margin: auto;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+        }
+        .dialog-window {
+            background-color: #ffff;
+            height: 615px;
+            width: 85%;
+            border-radius: .3rem;
+            box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+            padding: 1rem;
+        }
+
+        .w-75 {
+            width: 75%;
+            margin: auto;
+            align-items: center;
+        }
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            height: 485px;
+            overflow-y: scroll;
+        }
+        .input-user{
+            padding: .4rem .35rem;
+        }
+        .col-md-12{
+            padding:0!important;
+        }
+        .modal-lg{
+            max-width: 1000px;
+        }
+    </style>    
+}
+@section SubHeader{
+    <div class="sub-header-sm" style="background-image: url('/img/subheader2.jpg');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">İlanı Düzenle</h2>
+            <p style="font-size: 1rem;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore fugiat, libero fuga dolor minima debitis cum! Saepe doloribus porro asperiores.</p>
+        </div>
+    </div>
+}
+@section Errors{
+    <div class="mt-3 data-annotations container">
+        <div asp-validation-summary="All"></div>
+        <ul>@Html.Raw(TempData["Errors"])</ul>
+    </div>
+}
+
+<div class="ml-3 p-3 w-100" style="border:1px solid #dfdfdf">
+    <div class="mt-5 form-group row m-auto">
+        <div class="col">
+            <h5 class="medium-title w-100 border-bottom pb-2 orange">İlanı Düzenle</h5>
+        </div>
+    </div>
+    <form class="form-group" method="post" enctype="multipart/form-data">
+        <a class="button-user-dark-link" onclick="imageManager.openImagesDialog('@Model.Id')" data-toggle="modal" data-target="#exampleModalCenter">Görselleri Düzenle</a>
+        <div class="form-group">
+            <label for="title" class="col-md-12">İlan Kodu</label>
+            <div class="col-md-12">
+                <input disabled type="text" id="title" value="@Model.Id" class="input-user w-100 d-block">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="title" class="col-md-12">İlan Başlığı</label>
+            <div class="col-md-12">
+                <input type="text" name="Title" id="title" value="@Model.Title" class="input-user w-100 d-block">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber" class="col-md-12">Telefon Numarası</label>
+            <div class="col-md-12">
+                <input type="text" name="PhoneNumber" id="phoneNumber" value="@Model.PhoneNumber" class="input-user w-100 d-block">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="price" class="col-md-12">Fiyat</label>
+                    <div class="col-md-12">
+                        <input type="text" name="Price" id="price" value="@Model.Price" class="input-user w-100 d-block">
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="size" class="col-md-12">Boyut (M<sup>2</sup>)</label>
+                    <div class="col-md-12">
+                        <input type="text" name="Size" id="size" value="@Model.Size" class="input-user w-100 d-block">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="humanCapacity" class="col-md-12">İnsan Kapasitesi</label>
+            <div class="col-md-12">
+                <input type="text" name="HumanCapacity" id="humanCapacity" value="@Model.HumanCapacity" class="input-user w-100 d-block">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bedCapacity" class="col-md-12">Yatak Kapasitesi</label>
+            <div class="col-md-12">
+                <input type="text" name="BedCapacity" id="bedCapacity" value="@Model.BedCapacity" class="input-user w-100 d-block">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ShortDescription" class="col-md-12">Kısa (Üst) Açıklama</label>
+            <div class="col-md-12">
+                <textarea type="text" name="ShortDescription" id="ShortDescription">@Model.ShortDescription</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Description" class="col-md-12">Açıklama</label>
+            <div class="col-md-12">
+                <textarea type="text" name="Description" id="Description">@Model.Description</textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <small style="color:#b0b0b0">Şehir</small>
+                    <select name="City" class="admin-select rounded-0" onchange="changeCity(this)" id="cities"></select>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <small style="color:#b0b0b0">İlçe</small>
+                    <select name="District" class="admin-select rounded-0" disabled 
+                    onchange="changeDistrict(this)" id="districts"></select>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <small style="color:#b0b0b0">Mahalle</small>
+                    <select disabled name="Neighborhood" class="admin-select rounded-0" id="neighborhood"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm">
+                <label for="isActive" class="col-md-12">İlan Yayında mı?</label>
+            </div>
+            <div class="col-sm" style="text-align:right">
+                <div class="col-md-12">
+                    <input type="checkbox" data-toggle="switchbutton" data-onstyle="dark" value="true" name="IsActive" id="isActive" @(Model.IsActive ? "checked" : "") >
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="small-title border-bottom pb-2 mt-3 #db8e00">Filtreler</h6>
+        <div class="d-flex mb-3 flex-wrap">
+            @for(int i=0;i<Filterboxes.Count;i++)
+            {
+                <div class="category-box h-100 mt-4 mr-2" id="heading@(i)" style="cursor:pointer;border-radius:0;padding: .5rem;">
+                    <a class="d-flex justify-content-between" data-toggle="collapse" data-target="#filterBox@(i)">
+                        <p class="filter-title mb-0 smoke">@Filterboxes[i].FilterBoxTitle</p>
+                        <i class="ml-2 fa-solid fa-chevron-down d-flex align-items-center"></i>
+                    </a>
+                    @{
+                                                <ul id="filterBox@(i)" class="hover-scroll-170 pl-0 collapse filter-box" data-parent="#heading@(i)">
+                                                    @foreach(Filter filter in Filterboxes[i].Filters)
+                        {
+                                                        <li class="my-2 custom-control custom-checkbox">
+                                                            <input  class="custom-control-input" type="checkbox" @(Model.Filters.Contains(filter) ? "checked" : "") id="@filter.Id" name="FilterIds" value="@filter.Id">
+                                                            <label class="custom-control-label filter-link" for="@filter.Id">@filter.FilterTitle</label>
+                                                        </li>
+                        }
+                                                 </ul>
+                    }
+                </div>
+            }
+        </div>
+        <hr>
+        <h6 class="small-title border-bottom pb-2 mt-5">Kategoriler</h6>
+        <div class="form-group">
+            @foreach(Category category in Categories)
+            {
+                <ul class="mr-3 pl-0">
+                    <li class="my-2 custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" @(Model.Categories.Contains(category) ? "checked" : "") value="@category.Id" id="@category.Id" name="CategoryIds">
+                        <label class="custom-control-label filter-link" for="@category.Id">@category.Name</label>
+                    </li>
+                </ul>
+            }
+        </div>
+        <hr>
+        <input hidden name="Id" value="@Model.Id"/>
+        <input id="desc_input" hidden type="file" name="descFiles" multiple>
+        <button class="button-user-dark" style="width:100%;display:block">Kaydet</button>
+    </form>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Ürün Resimleri</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div style="display:grid;grid-template-columns:2fr 1fr">
+                <label class="button-user-dark" for="postedFiles" style="cursor:pointer;margin-bottom:0!important;width:100%!important">
+                    <i class="mdi mdi-folder-multiple-image"></i>
+                    Resim Yükle
+                </label>
+                <input name="postedFiles" multiple style="display: none;" id="postedFiles" type="file" class="file-upload-input">
+                <input hidden value="@Model.Id" name="Id" id="productId">
+                <button onclick="imageManager.uploadImage()" class="button-user">Gönder</button>
+                <hr>
+            </div>
+            <div class="images mb-2" id="images"></div>
+          </div>
+          <div class="modal-footer d-flex w-100 justify-content-between">
+          <button onclick="imageManager.saveAlignment()" class="btn btn-secondary">Sıralamayı Kaydet</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+@*
+    <div class="dialog" style="position:fixed;">
+        <div class="dialog-window">
+            <i onclick="openDialog()" class="mdi mdi-close close-btn"></i>
+            <div class="grid-2">
+                <h3 class="lg-title">Ürün Resimleri</h3>
+                    <input name="postedFiles" multiple style="display: none;" 
+                        id="postedFiles" type="file" class="file-upload-input">
+                    <input hidden value="@Model.Id" name="Id" id="productId">
+                    <div style="display:grid;grid-template-columns:2fr 1fr">
+                        <label class="btn btn-primary upload-image shp-left" 
+                            for="postedFiles" style="margin-bottom:0!important;width:100%!important">
+                            <i class="mdi mdi-folder-multiple-image"></i>
+                            Resim Yükle
+                        </label>
+                        <button onclick="imageManager.uploadImage()" class="btn btn-danger text-white shp-right">Gönder</button>
+                    </div>
+            </div>
+            <hr>
+            <div class="images mb-2" id="images"></div>
+            <button onclick="imageManager.saveAlignment()" class="btn btn-primary" style="width: 30%;margin-top: -3.35rem;">Sıralamayı Kaydet</button>
+        </div>
+    </div>
+*@
+</div>

@@ -1,0 +1,25 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+@section SubHeader{
+    <div class="sub-header-xsm" style="background-image: url('/img/subheader3.webp');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">İlan Vermeye Başla</h2>
+            <p style="font-size: 1rem;">tatilbuldum.com üzerinden tamamen ücretsiz bir şekilde ilan vermeye başlayın</p>
+        </div>
+    </div>
+}
+
+
+<div class="ml-3" style="border: 1px solid #dfdfdf;padding: 1rem">
+    <h3>İlanlarınızı tatilimibuldum.com'da <span style="color:#db8e00">ücretsiz</span> yayınlayın</h3>
+    <p class="mt-3">tatilbuldum.com üzerinden tamamen ücretsiz bir şekilde ilan vermeye başlayın, yapmanız gereken tek şey kendinizi kısaca tanıtmak ve ardından mesajınızı bizlere göndermek.</p>
+    <p>Hemen yetkili birimimize hesabınız adına başvuruda bulunarak başvurunuzun incelenmesinin ardından ilanlarınızı sitemizde yayınlamaya başlayabilirsiniz.</p>
+    <form method="post" class="mt-4">
+        <label class="medium text-dark font-weight-bold">İlgili birimimize isteğinizle ilgili bir mesaj bırakın</label>
+        <textarea name="AdvertRequestMessage" class="input-user w-100" rows="7"></textarea>
+        <button class="btn btn-warning" style="background-color:#db8e00;color:#fff;border:none">İstek Gönder</button>
+    </form>
+</div>

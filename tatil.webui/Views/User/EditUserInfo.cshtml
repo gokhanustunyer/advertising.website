@@ -1,0 +1,113 @@
+﻿@using tatil.entity.Identity
+@model AppUser
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+@section SubHeader{
+    <div class="sub-header-xsm" style="background-image: url('/img/subheader3.webp');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">Profilim</h2>
+            <p style="font-size: 1rem;">Profilinizde isim ve soyisim bilgilerinizi buradan güncelleyebilirsiniz. E-Posta ve şifreniz için ise aşağınaki kalem ibarelerine tıklayarak bunu yapabilirsiniz</p>
+        </div>
+    </div>
+}
+
+@section Styles{
+    <style>
+        .gutters-sm .input-user{
+            padding: .4rem .35rem;
+        }
+
+    </style>
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        function resetPassword(){
+            if (confirm("Şifrenizi yenilemeniz için tarafınıza mail gönderilecektir, şifrenizi yenilemek istediğinizden emin misiniz?")){
+                var formData = new FormData();
+                $.ajax({
+                    type: "POST",
+                    url: "/user/updatePasswordRequest",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: () => {
+                        let notyf = new Notyf({
+                            duration: 3000,
+                            dismissible: true,
+                            position: { x: 'right', y: 'bottom' }
+                        });
+                        notyf.success("Şifre yenileme işlemi için tarafınıza mail gönderilmiştir");
+                    }
+                })
+            }
+        }
+    </script>
+}
+@section Errors{
+    <div class="mt-3 data-annotations container">
+        <div asp-validation-summary="All"></div>
+        <ul>@Html.Raw(TempData["Errors"])</ul>
+    </div>
+}
+<div class="content w-100">
+    <div class="p-3 w-100 ml-3" style="box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;">
+        <div class="main-body">
+            <div class="row gutters-sm">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <form class="row" method="post">
+                            <div class="col-sm-6">
+                                <div>
+                                    <h6 class="mb-0">İsim</h6>
+                                </div>
+                                <div class="text-secondary">
+                                    <input class="input-user mt-1 w-100" name="firstName" value="@Model.FirstName">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    <h6 class="mb-0">Soyisim</h6>
+                                </div>
+                                <div class="text-secondary">
+                                    <input class="input-user mt-1 w-100" name="lastName" value="@Model.LastName">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mt-2">
+                                <button class="w-100 button-user d-block">Kaydet</button>
+                            </div>
+                        </form>
+                            <hr>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                <p>@Model.Email</p>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <a href="/user/UpdateEmail"><i class="medium fa-solid fa-marker"></i></a>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <h6 class="mb-0">Şifre</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                <p> &#8226 &#8226 &#8226 &#8226 &#8226 &#8226 &#8226 &#8226 &#8226 </p>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <a style="cursor:pointer" onclick='resetPassword()'>
+                                    <i class="medium fa-solid fa-marker"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>           
+                
+</div>

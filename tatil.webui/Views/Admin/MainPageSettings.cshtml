@@ -1,0 +1,136 @@
+﻿@using tatil.entity.Statics
+@model MainPage
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts{}
+@section Styles{}
+<form class="mt-5 form-group" method="post" enctype="multipart/form-data">
+    <h4 style="padding: .5rem">Ana Sayfa Ayarları</h4>
+    <div class="form-group mt-2">
+        <label for="headerImagePath" class="col-md-12">Ana Resim Yazısı</label>
+        <div class="col-md-12">
+            <p>Aktif Resim</p>
+            @if (@Model.headerImagePath != null){
+                <img width="400" src="@Model.headerImagePath"/>
+            }
+            <input type="file" name="HeaderImage">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="headerText" class="col-md-12">Ana Resim Yazısı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="headerText" id="headerText" class="form-control form-control-line">@Model.headerText</textarea>
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="welcomeTextImagePath1" class="col-md-12">Hoşgeldiniz Resim (Üst)</label>
+        <div class="col-md-12">
+            <p>Aktif Resim</p>
+            @if (@Model.welcomeTextImagePath1 != null){
+                <img width="400" src="@Model.welcomeTextImagePath1"/>
+            }
+            <input type="file" name="WelcomeImage1">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="welcomeTextImagePath2" class="col-md-12">Hoşgeldiniz Resim (Alt)</label>
+        <div class="col-md-12">
+            <p>Aktif Resim</p>
+            @if (@Model.welcomeTextImagePath2 != null){
+                <img width="400" src="@Model.welcomeTextImagePath2"/>
+            }
+            <input type="file" name="WelcomeImage2">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="WelcomeTitle" class="col-md-12">Hoşgeldiniz Başlığı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="WelcomeTitle" id="WelcomeTitle" class="form-control form-control-line">@Model.welcomeTitle</textarea>
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="WelcomeText" class="col-md-12">Hoşgeldiniz Yazısı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="WelcomeText" id="WelcomeText" class="form-control form-control-line">@Model.welcomeText</textarea>
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="headerImagePath" class="col-md-12">Sayısal Verilerle Biz Arka Plan Resmi</label>
+        <div class="col-md-12">
+            <p>Aktif Resim</p>
+            @if (@Model.NumericDatasImagePath != null){
+                <img width="400" src="@Model.NumericDatasImagePath"/>
+            }
+            <input type="file" name="NumericsImage">
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="UserCount" class="col-md-12">Kullanıcı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="UserCount" id="UserCount" class="form-control form-control-line" placeholder="300">@Model.CustomerCount</textarea>
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="CityCount" class="col-md-12">Şehir Sayısı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="CityCount" id="CityCount" class="form-control form-control-line" placeholder="81">@Model.CityCount</textarea>
+        </div>
+    </div>
+    <div class="form-group mt-2">
+        <label for="PublisherCount" class="col-md-12">Yayıncı Sayısı</label>
+        <div class="col-md-12">
+            <textarea type="text" name="PublisherCount" id="PublisherCount" class="form-control form-control-line" placeholder="50">@Model.StreamerCount</textarea>
+        </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;display:block">Kaydet</button>
+</form>
+<div class="row mt-5">
+    <div class="col">
+        <h4>Ana Sayfa Link İçerikleri</h4>
+    </div>
+    <div class="col" style="text-align:right">
+        <a href="/admin/newlinkbox" class="btn btn-success text-white"><i class="mdi mdi-plus"></i> Yeni Link İçeriği</a>
+    </div>
+</div>
+<table class="table table-hover" style="background-color:#fff">
+  <thead>
+    <tr>
+        <th scope="col">Başlık</th>
+        <th scope="col" width="150">Düzenle/Sil</th>
+        <th scope="col" width="150">Sıralama</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(var i = 0; i < @Model.Contents.Count; i++)
+    {
+    <tr>
+        <td>@Model.Contents[i].ContentTitle</td>
+        <td>
+            <a href="/admin/editlinkboxcontent/@Model.Contents[i].Id" 
+            class="btn btn-sm btn-primary">Düzenle</a>
+            <form method="post" action="/admin/deletePageContent" style="display:inline">
+                <input hidden value="@Model.Contents[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    <i class="mdi mdi-delete"></i>
+                </button>
+            </form>
+        </td>
+        <td>
+            <form method="post" action="/admin/increasecontentindex" style="display:inline">
+                <input hidden value="@Model.Contents[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    <i class="mdi mdi-chevron-down"></i>
+                </button>
+            </form>
+            <form method="post" action="/admin/minuscontentindex" style="display:inline">
+                <input hidden value="@Model.Contents[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    <i class="mdi mdi-chevron-up"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+    }
+  </tbody>
+</table>

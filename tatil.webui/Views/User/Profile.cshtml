@@ -1,0 +1,60 @@
+﻿@using tatil.entity.Identity
+@model AppUser
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+@section SubHeader{
+    <div class="sub-header-sm" style="background-image: url('/img/subheader2.jpg');">
+        <div class="container sub-header-content">
+            <h2 class="sub-header-title">Profilim</h2>
+            <p style="font-size: 1rem;">Profile bölümünde bilgilerinizi kontrol edebilir ve güncelleyebilirsiniz. Eğer daha üst bir kullanıcıysanız ilan ekleyebilir, düzenleyebilir ve ilanlarınızı daha iyi hale getirebilirsiniz. Eğer değilseniz tek tıkla olabilirsiniz!</p>
+        </div>
+    </div>
+}
+
+<div class="content w-100">
+    <div class="p-3 w-100 ml-3" style="box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;">
+        <div class="main-body">
+            <div class="row gutters-sm">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <div class="row">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">İsim Soyisim</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        @Model.FirstName @Model.LastName
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Email</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @Model.Email
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Telefon</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @Model.PhoneNumber
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    <div class="col-sm-12">
+                        <style>.b:hover{text-decoration: none!important;color: #fff!important;}</style>
+                        <a class="b button-user" href="/user/EditUserInfo">Düzenle</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>           
+                
+</div>

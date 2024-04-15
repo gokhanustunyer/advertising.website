@@ -1,0 +1,72 @@
+﻿@using tatil.entity.Statics
+@model PageStrings
+@section SubHeader{
+        <div class="sub-header-sm" style="background-image: url('/img/subheader4.jpg');">
+            <div class="container sub-header-content">
+                <h2 class="sub-header-title mb-0">Hakkımızda</h2>
+                <p class="pb-0">tatilimibuldum.com ile ilgili daha fazla ve daha detaylı bilgiler öğrenin ve bizlere iletmek istediğiniz mesajlarınızı gönderin</p>
+            </div>
+        </div>
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/advert-details.css">
+    <style>
+       body{
+           background-color: #f9f9f9;
+       }
+    </style>
+}
+
+<div class="advert-details mt-5 container d-flex">
+    <div class="p-3 images d-flex flex-column last-none">
+        @Html.Raw(Model.AboutUs)
+    </div>
+    <form class="advert-strings" style="width:30%;height: 100%;" method="post" action="/home/sendContactMail">
+        <h3 class="josefin border-bottom pb-3 pl-2">Bize Mesaj Gönderin</h3>
+        <div class="mt-3 data-annotations dark-annotations w-100" style="margin:0">
+            <div asp-validation-summary="All"></div>
+            <ul>@Html.Raw(TempData["Errors"])</ul>
+        </div>
+        <div class="col-sm p-0">
+            <div class="login-cart mt-3">
+                <div class="form-group">
+                    <label for="name">İsim Soyisim</label>
+                    <input type="text" class="input-user d-block w-100" id="name" name="Name" placeholder="İsimiz Soyisminiz">
+                    </div>
+            </div>
+        </div>
+        <div class="col-sm p-0">
+            <div class="login-cart mt-3">
+                <div class="form-group">
+                    <label for="Subject">Konu</label>
+                    <input type="text" class="input-user d-block w-100" id="Subject" name="Subject" placeholder="Konu">
+                    </div>
+            </div>
+        </div>
+        <div class="col-sm p-0">
+            <div class="login-cart mt-3">
+                <div class="form-group">
+                    <label for="Email">E-Posta Adresiniz</label>
+                    <input type="email" class="input-user d-block w-100" id="Email" name="Email" placeholder="E-Posta Adresiniz">
+                    </div>
+            </div>
+        </div>
+        <div class="col-sm p-0">
+            <div class="login-cart mt-3">
+                <div class="form-group">
+                    <label for="phone">Telefon Numaranız</label>
+                    <input type="text" class="input-user d-block w-100" id="phone" name="Phone" placeholder="Telefon Numaranız">
+                    </div>
+            </div>
+        </div>
+        <div class="col-sm p-0">
+            <div class="login-cart mt-3">
+                <div class="form-group">
+                    <label for="message">Mesajınız</label>
+                    <textarea type="text" class="input-user d-block w-100"s id="message" name="Messsage" placeholder="Mesajınız" rows="5"></textarea>
+                    </div>
+            </div>
+        </div>
+        <button class="button-user-dark d-block w-100">Gönder</button>
+    </form>
+</div>

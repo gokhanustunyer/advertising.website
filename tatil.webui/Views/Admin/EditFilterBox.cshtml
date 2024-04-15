@@ -1,0 +1,99 @@
+﻿@using tatil.entity.EntityReferences.Filter
+@model FilterEditModel
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Filtre Düzenle";
+}
+@section Scripts{
+    <script src="~/admin/dist/js/filters/filterEdit.js"></script>
+    <script>window.addEventListener("load", () => { getOptions('@Model.Id'); })</script>
+}
+@section Styles{
+    <style>
+        li{
+            list-style: none;
+        }
+        li label{
+            margin-bottom: 0
+        }
+        li ul{
+            margin-left:.6rem;
+        }
+        ul .form-check{
+            margin-bottom:0;
+        }
+        ol, ul{
+            padding-left: 0;
+        }
+    </style>
+}
+
+<div class="econtent-65"></div>
+<div class="create-product mt-4 mb-3 border-bottom">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="validation-box mb-2" asp-validation-summary="All"></div>
+    }
+    <div class="row" style="margin-top:2rem">
+        <div class="col">
+            <h2>Filtreyi Düzenle @Model.FilterBoxTitle</h2>
+        </div>
+        <div class="col" style="text-align:right">
+            <form method="post" action="/admin/deleteFilterBox">
+                <input hidden asp-for="Id">
+                <button class="btn btn-danger btn-sm text-white">Filtreyi Sil</button>
+            </form>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" id="form">
+    <input asp-for="Id" id="prId" hidden/>
+        <div class="form">
+            <div class="form-group mt-3">
+                <label asp-for="FilterBoxTitle" class="col-md-12">Filtre Adı</label>
+                <div class="col-md-12">
+                    <input type="text" asp-for="FilterBoxTitle" class="form-control form-control-line">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;display:block">Değişklikleri Kaydet</button>
+        </div>
+    </form>
+    <div class="form-group mt-3">
+        <label for="options" class="col-md-12">Seçenekler</label>
+        <p style="display:flex;justify-content:center">
+            <i onclick="newOption()" style="cursor:pointer;display:flex;align-items:center;justify-content:center;height:40px;width:40px;background-color:#36bea6;border-radius:50%;color:#fff" class="mdi mdi-plus"></i>
+        </p>
+        <div class="mb-1 mt-2 flex-col" id="optionCount"></div>
+        <input id="OptionsAsJsonString" name="OptionsAsJsonString" type="text" class="admin-input" hidden>
+    </div>
+</div>
+
+<div class="mt-4 mb-3">
+    <table class="table table-hover" style="background-color:#fff">
+        <thead>
+        <tr>
+            <th scope="col">Resim</th>
+            <th scope="col">Başlık</th>
+            <th scope="col" style="width:225px"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(var i = 0; i < @Model.Adverts.Count; i++)
+        {
+        <tr>
+            <td><img style="width:60px;" src="@Model.Adverts[i].AdvertImages[0].Path"></td>
+            <td>@Model.Adverts[i].Title</td>
+            <td>
+                <a href="/admin/editAdvert/@Model.Adverts[i].Id" 
+                class="btn btn-sm btn-primary">Düzenle</a>
+                <form method="post" action="/admin/deleteAdvert" style="display:inline">
+                    <input hidden value="@Model.Adverts[i].Id" name="Id">
+                    <button class="btn btn-sm btn-primary">
+                        <i class="mdi mdi-delete"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>

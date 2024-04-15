@@ -1,0 +1,79 @@
+﻿@using tatil.entity.Category
+@using tatil.entity.EntityReferences.Advert.Create
+@using tatil.entity.Filter
+@model AdvertCreateModel
+@section Scripts{
+    <script src="~/business/js/filters/filters.read.js"></script>
+}
+
+<form enctype="multipart/form-data" method="post" class="mb-5">
+  <div class="form-group">
+    <label for="exampleInputEmail1">İlan Başlığı</label>
+    <input name="Title" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Telefon Numarası</label>
+    <input name="PhoneNumber" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Boyut (M2)</label>
+    <input name="Size" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Fiyat</label>
+    <input name="Price" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">İnsan Kapasitesi</label>
+    <input name="HumanCapacity" class="form-control" id="exampleInputEmail1">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Yatak Kapasitesi</label>
+    <input name="BedCapacity" class="form-control" id="exampleInputEmail1">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Açıklama</label>
+    <textarea name="Description" class="form-control"></textarea>
+  </div>
+
+  <div class="form-group">
+    <p for="exampleInputEmail1">Filtreler</p>
+    @for(int i=0;i<Model.FilterBoxes.Count;i++)
+    {
+        <div class="category-box mt-4" id="heading@(i)" style="cursor:pointer">
+            <a class="d-flex justify-content-between" data-toggle="collapse" data-target="#filterBox@(i)">
+                <h5 class="filter-title">@Model.FilterBoxes[i].FilterBoxTitle</h5>
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            @{
+                <ul id="filterBox@(i)" class="collapse filter-box" data-parent="#heading@(i)">
+                    @foreach(Filter filter in Model.FilterBoxes[i].Filters)
+                    {
+                        <li class="my-2 custom-control custom-checkbox">
+                            <input  class="custom-control-input" type="checkbox" id="@filter.Id" name="FilterIds"
+                            onchange="query.updateFilterIds(this, '@filter.Id','@ViewData["Category"]')" value="@filter.Id">
+                            <label class="custom-control-label filter-link" for="@filter.Id">@filter.FilterTitle</label>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <p for="exampleInputEmail1">Kategoriler</p>
+    @foreach(Category category in Model.Categories)
+    {
+      <div class="mr-3">
+          <input class="form-check-input" type="checkbox" value="@category.Id" id="defaultCheck1" value="@category.Id" name="CategoryIds">
+          <label class="form-check-label" for="@category.Id">
+            @category.Name
+          </label>
+      </div>
+    }
+  </div>
+  <input type="file" name="PostedFiles" multiple/>
+  <hr>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

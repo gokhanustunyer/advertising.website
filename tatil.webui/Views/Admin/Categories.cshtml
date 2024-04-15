@@ -1,0 +1,67 @@
+﻿@using tatil.entity.Category
+@model List<Category>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles{
+    <style>
+        li{
+            list-style: none;
+        }
+        li label{
+            margin-bottom: 0
+        }
+        li ul{
+            margin-left:.6rem;
+        }
+        ul .form-check{
+            margin-bottom:0;
+        }
+        ol, ul{
+            padding-left: 0;
+        }
+        .filter-result{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+}
+
+
+<div class="econtent-65"></div>
+<div class="row">
+    <div class="col">
+        <h2>Kategoriler</h2>
+    </div>
+    <div class="col" style="text-align:right">
+        <a href="/admin/createCategory" class="btn btn-success text-white"><i class="mdi mdi-plus"></i> Yeni Kategori</a>
+    </div>
+</div>
+
+<table class="table table-hover" style="background-color:#fff">
+  <thead>
+    <tr>
+        <th scope="col">Adı</th>
+        <th scope="col" width="150"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(var i = 0; i < @Model.Count; i++)
+    {
+    <tr>
+        <td>@Model[i].Name</td>
+        <td>
+            <a href="/admin/editCategory/@Model[i].Id" 
+            class="btn btn-sm btn-primary">Düzenle</a>
+            <form method="post" action="/admin/deleteCategory" style="display:inline">
+                <input hidden value="@Model[i].Id" name="Id">
+                <button class="btn btn-sm btn-primary">
+                    <i class="mdi mdi-delete"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+    }
+  </tbody>
+</table>
