@@ -1,3 +1,4 @@
+Project Development Date: Apr 2023
 Project achitecture and techs: 
 <br/>
 ASP.NET Core MVC, N-Tier Architecture, JavaScript, HTML, CSS, AJAX, Generic Repository, Entity 
